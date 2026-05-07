@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - FoodDelivery Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            100: '#F5F5F5',
+                            300: '#A8A8A8',
+                            400: '#A8A8A8',
+                            500: '#A8A8A8',
+                            600: '#1A1D23',
+                            700: '#1A1D23',
+                            800: '#1A1D23',
+                            900: '#1A1D23',
+                            950: '#0F1115'
+                        },
+                        blue: {
+                            300: '#C9A14A',
+                            400: '#C9A14A',
+                            500: '#C9A14A',
+                            600: '#b08d41',
+                            950: '#0F1115'
+                        },
+                        cyan: {
+                            200: '#C9A14A',
+                            300: '#C9A14A',
+                            400: '#C9A14A',
+                            500: '#C9A14A',
+                            950: '#0F1115'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .border-blue-500\/20,
+        .border-blue-500\/30,
+        .border-slate-800\/50,
+        .border-blue-500\/40,
+        .border-cyan-500\/40 {
+            border-color: rgba(255, 255, 255, 0.08) !important;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-slate-950 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-4 sm:p-6 relative">
+
+    <div class="absolute top-0 left-0 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-cyan-300/20 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto">
+
+        <div th:replace="~{fragments/nav :: nav}"></div>
+
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold text-slate-100">Dashboard</h1>
+            <p class="text-slate-400 text-sm mt-1">Overview of your admin management system</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+
+            <div
+                class="bg-slate-900/60 border border-blue-500/20 rounded-2xl p-6 hover:border-blue-500/40 transition-colors">
+                <div class="flex items-center justify-between mb-3">
+                    <p class="text-slate-400 text-sm font-medium">Total Admins</p>
+                    <div class="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                        <span class="text-blue-300 text-sm">&#9679;</span>
+                    </div>
+                </div>
+                <p class="text-4xl font-bold text-slate-100" th:text="${totalAdmins}">0</p>
+                <p class="text-slate-500 text-xs mt-2">All registered admins</p>
+            </div>
+
+            <div
+                class="bg-slate-900/60 border border-blue-500/20 rounded-2xl p-6 hover:border-cyan-500/40 transition-colors">
+                <div class="flex items-center justify-between mb-3">
+                    <p class="text-slate-400 text-sm font-medium">Active Admins</p>
+                    <div class="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
+                        <span class="text-green-300 text-sm">&#10003;</span>
+                    </div>
+                </div>
+                <p class="text-4xl font-bold text-cyan-300" th:text="${activeAdmins}">0</p>
+                <p class="text-slate-500 text-xs mt-2">Currently active accounts</p>
+            </div>
+
+            <div
+                class="bg-slate-900/60 border border-blue-500/20 rounded-2xl p-6 hover:border-blue-500/40 transition-colors">
+                <div class="flex items-center justify-between mb-3">
+                    <p class="text-slate-400 text-sm font-medium">Super Admins</p>
+                    <div class="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                        <span class="text-blue-300 text-xs font-bold">SA</span>
+                    </div>
+                </div>
+                <p class="text-4xl font-bold text-blue-300" th:text="${superAdminCount}">0</p>
+                <p class="text-slate-500 text-xs mt-2">Full system access</p>
+            </div>
+
+            <div
+                class="bg-slate-900/60 border border-blue-500/20 rounded-2xl p-6 hover:border-blue-500/40 transition-colors">
+                <div class="flex items-center justify-between mb-3">
+                    <p class="text-slate-400 text-sm font-medium">Admins</p>
+                    <div class="w-8 h-8 bg-cyan-500/20 rounded-lg flex items-center justify-center">
+                        <span class="text-cyan-300 text-xs font-bold">A</span>
+                    </div>
+                </div>
+                <p class="text-4xl font-bold text-slate-100" th:text="${adminCount}">0</p>
+                <p class="text-slate-500 text-xs mt-2">Standard admin access</p>
+            </div>
+
+            <div
+                class="bg-slate-900/60 border border-blue-500/20 rounded-2xl p-6 hover:border-blue-500/40 transition-colors">
+                <div class="flex items-center justify-between mb-3">
+                    <p class="text-slate-400 text-sm font-medium">Moderators</p>
+                    <div class="w-8 h-8 bg-slate-500/20 rounded-lg flex items-center justify-center">
+                        <span class="text-slate-300 text-xs font-bold">M</span>
+                    </div>
+                </div>
+                <p class="text-4xl font-bold text-slate-300" th:text="${moderatorCount}">0</p>
+                <p class="text-slate-500 text-xs mt-2">Moderation access only</p>
+            </div>
+
+            <div sec:authorize="hasRole('SUPER_ADMIN')"
+                class="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/30 rounded-2xl p-6 flex flex-col justify-between">
+                <p class="text-slate-300 text-sm font-medium mb-3">Quick Actions</p>
+                <a th:href="@{/admin/admins/new}"
+                    class="w-full bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold py-2 px-4 rounded-xl text-center transition-colors shadow-lg shadow-blue-500/20">
+                    + Create New Admin
+                </a>
+                <a th:href="@{/admin/admins}"
+                    class="w-full bg-slate-700 hover:bg-slate-600 text-slate-300 text-sm font-medium py-2 px-4 rounded-xl text-center transition-colors mt-2">
+                    View All Admins
+                </a>
+            </div>
+        </div>
+
+        <div class="bg-slate-900/60 border border-blue-500/20 rounded-2xl overflow-hidden">
+            <div class="px-6 py-4 border-b border-blue-500/20 flex items-center justify-between">
+                <h2 class="text-slate-100 text-base font-semibold">Recent Activity Log</h2>
+                <a th:href="@{/admin/admins}" sec:authorize="hasRole('SUPER_ADMIN')"
+                    class="text-cyan-300 hover:text-cyan-200 text-sm transition-colors">View all &rarr;</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-slate-800/40 text-left text-slate-400 text-xs uppercase tracking-wider">
+                            <th class="px-6 py-3">Name</th>
+                            <th class="px-6 py-3">Email</th>
+                            <th class="px-6 py-3">Role</th>
+                            <th class="px-6 py-3">Status</th>
+                            <th class="px-6 py-3">Last Login</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="admin, stat : ${recentAdmins}"
+                            th:classappend="${stat.odd} ? 'bg-slate-900/20' : ''"
+                            class="border-t border-slate-800/50 hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4 text-slate-100 font-medium text-sm" th:text="${admin.name}"></td>
+                            <td class="px-6 py-4 text-slate-300 text-sm" th:text="${admin.email}"></td>
+                            <td class="px-6 py-4">
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-medium"
+                                    th:classappend="${admin.adminRole.name() == 'SUPER_ADMIN'} ? 'bg-blue-500/20 text-blue-300' : (${admin.adminRole.name() == 'ADMIN'} ? 'bg-cyan-500/20 text-cyan-300' : 'bg-slate-600/50 text-slate-300')"
+                                    th:text="${admin.adminRole}"></span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span th:if="${admin.active}"
+                                    class="px-2.5 py-1 rounded-lg text-xs font-medium bg-green-500/20 text-green-300">Active</span>
+                                <span th:unless="${admin.active}"
+                                    class="px-2.5 py-1 rounded-lg text-xs font-medium bg-red-500/20 text-red-300">Inactive</span>
+                            </td>
+                            <td class="px-6 py-4 text-slate-400 text-sm"
+                                th:text="${admin.lastLoginAt != null ? #temporals.format(admin.lastLoginAt, 'dd MMM yyyy, HH:mm') : 'Never'}">
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(recentAdmins)}">
+                            <td colspan="5" class="px-6 py-10 text-center text-slate-500 text-sm">No admin activity
+                                recorded yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
