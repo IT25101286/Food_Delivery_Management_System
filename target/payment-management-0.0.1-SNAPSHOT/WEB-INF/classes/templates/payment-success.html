@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Success</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0F1115; color: #F5F5F5; }
+    </style>
+</head>
+<body>
+<div class="mx-auto flex min-h-screen max-w-3xl items-center justify-center px-6 py-12">
+    <div class="w-full rounded-2xl border-2 p-8 text-center shadow-xl" style="background-color: #1A1D23; border-color: rgba(201, 161, 74, 0.3);">
+        <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full text-2xl" style="background-color: rgba(201, 161, 74, 0.2); color: #C9A14A;">✓</div>
+        <h1 class="text-3xl font-black" style="color: #C9A14A;">Payment Created</h1>
+        <p style="color: #A8A8A8;" class="mt-2">Your payment has been submitted with status <span class="font-semibold" style="color: #FDBA74;">PENDING</span>.</p>
+        <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <a href="/payment/pay" class="rounded-lg px-5 py-2.5 font-semibold" style="background-color: #C9A14A; color: #0F1115;">Make Another Payment</a>
+            <a href="/payment/my-payments" class="rounded-lg px-5 py-2.5" style="border: 1px solid rgba(201, 161, 74, 0.3); color: #F5F5F5; background-color: transparent;">View My Payments</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Payments</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0F1115; color: #F5F5F5; }
+        input, select { background-color: #0F1115 !important; border-color: rgba(201, 161, 74, 0.2) !important; color: #F5F5F5 !important; }
+    </style>
+</head>
+<body>
+<div class="mx-auto max-w-6xl px-6 py-10">
+    <div class="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <h1 class="text-3xl font-black" style="color: #C9A14A;">My Payment History</h1>
+            <p style="color: #A8A8A8;" th:text="${session.fullName}"></p>
+        </div>
+        <div class="flex gap-2">
+            <a href="/payment/pay" class="rounded-lg px-4 py-2 text-sm" style="border: 1px solid rgba(201, 161, 74, 0.3); background-color: #1A1D23; color: #F5F5F5;">Make Payment</a>
+            <a href="/logout" class="rounded-lg px-4 py-2 text-sm font-semibold" style="background-color: #C9A14A; color: #0F1115;">Logout</a>
+        </div>
+    </div>
+
+    <div class="overflow-x-auto rounded-2xl border-2 p-1" style="border-color: rgba(201, 161, 74, 0.3); background-color: #1A1D23;">
+        <table class="min-w-full text-sm">
+            <thead style="background-color: rgba(201, 161, 74, 0.1); color: #A8A8A8;">
+            <tr>
+                <th class="px-4 py-3 text-left">Payment Ref</th>
+                <th class="px-4 py-3 text-left">Order Ref</th>
+                <th class="px-4 py-3 text-left">Amount</th>
+                <th class="px-4 py-3 text-left">Method</th>
+                <th class="px-4 py-3 text-left">Status</th>
+                <th class="px-4 py-3 text-left">Paid At</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(payments)}">
+                <td colspan="6" class="px-4 py-8 text-center" style="color: #A8A8A8;">No payments yet.</td>
+            </tr>
+            <tr th:each="p : ${payments}" style="border-top: 1px solid rgba(201, 161, 74, 0.2);">
+                <td class="px-4 py-3 font-semibold" style="color: #C9A14A;" th:text="${p.paymentRef}"></td>
+                <td class="px-4 py-3" th:text="${p.orderRef}"></td>
+                <td class="px-4 py-3" th:text="${#numbers.formatDecimal(p.amount, 1, 'COMMA', 2, 'POINT')}"></td>
+                <td class="px-4 py-3">
+                    <span th:if="${p.paymentMethod == 'CASH'}" class="rounded-full px-2.5 py-1 text-xs font-semibold" style="border: 1px solid rgba(34, 197, 94, 0.3); background-color: rgba(34, 197, 94, 0.1); color: #86EFAC;">CASH</span>
+                    <span th:if="${p.paymentMethod == 'CARD'}" class="rounded-full px-2.5 py-1 text-xs font-semibold" style="border: 1px solid rgba(59, 130, 246, 0.3); background-color: rgba(59, 130, 246, 0.1); color: #93C5FD;">CARD</span>
+                    <span th:if="${p.paymentMethod == 'MOBILE'}" class="rounded-full px-2.5 py-1 text-xs font-semibold" style="border: 1px solid rgba(201, 161, 74, 0.3); background-color: rgba(201, 161, 74, 0.1); color: #C9A14A;">MOBILE</span>
+                </td>
+                <td class="px-4 py-3">
+                    <span th:if="${p.status == 'PENDING'}" class="rounded-full px-2.5 py-1 text-xs font-semibold" style="border: 1px solid rgba(251, 146, 60, 0.3); background-color: rgba(251, 146, 60, 0.1); color: #FDBA74;">PENDING</span>
+                    <span th:if="${p.status == 'COMPLETED'}" class="rounded-full px-2.5 py-1 text-xs font-semibold" style="border: 1px solid rgba(34, 197, 94, 0.3); background-color: rgba(34, 197, 94, 0.1); color: #86EFAC;">COMPLETED</span>
+                    <span th:if="${p.status == 'FAILED'}" class="rounded-full px-2.5 py-1 text-xs font-semibold" style="border: 1px solid rgba(239, 68, 68, 0.3); background-color: rgba(239, 68, 68, 0.1); color: #FF6B6B;">FAILED</span>
+                </td>
+                <td class="px-4 py-3" style="color: #A8A8A8;" th:text="${#temporals.format(p.paidAt, 'yyyy-MM-dd HH:mm')}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
