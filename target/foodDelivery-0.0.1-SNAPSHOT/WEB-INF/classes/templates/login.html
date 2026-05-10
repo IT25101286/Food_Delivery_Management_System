@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | FoodDelivery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen antialiased">
+    <div class="absolute inset-0 -z-10 bg-gradient-to-br from-blue-950 via-slate-950 to-cyan-950"></div>
+    <div class="absolute -top-24 -right-24 h-80 w-80 rounded-full bg-blue-400/20 blur-3xl"></div>
+    <div class="absolute -bottom-20 -left-20 h-80 w-80 rounded-full bg-cyan-300/20 blur-3xl"></div>
+
+    <header class="max-w-7xl mx-auto px-6 py-6">
+        <nav class="flex items-center justify-between rounded-2xl bg-slate-900/70 border border-blue-500/20 px-5 py-4 backdrop-blur shadow-xl shadow-blue-900/20">
+            <div class="flex items-center gap-2">
+                <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-bold">FD</span>
+                <span class="font-extrabold text-xl tracking-tight">FoodDelivery</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <a th:href="@{/}" class="px-4 py-2 rounded-lg text-sm font-semibold text-blue-200 hover:bg-blue-500/20 transition">Home</a>
+                <a th:href="@{/register}" class="px-4 py-2 rounded-lg text-sm font-semibold bg-blue-500 text-white hover:bg-blue-600 transition">Create Account</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-10">
+        <div class="max-w-md mx-auto rounded-3xl bg-slate-900/70 border border-blue-500/20 p-8 shadow-2xl shadow-blue-900/30">
+            <h1 class="text-3xl font-black text-white text-center">Welcome Back</h1>
+            <p class="text-center text-slate-300 mt-2">Sign in to continue your food journey</p>
+
+            <div th:if="${param.error}" class="mt-5 rounded-xl bg-red-500/15 border border-red-400/30 text-red-200 px-4 py-3 text-sm">
+                Invalid email or password.
+            </div>
+            <div th:if="${param.logout}" class="mt-5 rounded-xl bg-blue-500/15 border border-blue-400/30 text-blue-200 px-4 py-3 text-sm">
+                You have been logged out successfully.
+            </div>
+            <div th:if="${param.updated}" class="mt-5 rounded-xl bg-cyan-500/15 border border-cyan-400/30 text-cyan-200 px-4 py-3 text-sm">
+                Profile updated successfully. Please log in again.
+            </div>
+            <div th:if="${param.deleted}" class="mt-5 rounded-xl bg-cyan-500/15 border border-cyan-400/30 text-cyan-200 px-4 py-3 text-sm">
+                Your account has been deleted.
+            </div>
+
+            <form th:action="@{/login}" method="post" class="mt-6 space-y-5">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-200 mb-2">Email</label>
+                    <input
+                        type="email"
+                        name="username"
+                        required
+                        class="w-full rounded-xl bg-slate-950/70 border border-blue-500/30 px-4 py-3 text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+                        placeholder="you@example.com">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-slate-200 mb-2">Password</label>
+                    <input
+                        type="password"
+                        name="password"
+                        required
+                        class="w-full rounded-xl bg-slate-950/70 border border-blue-500/30 px-4 py-3 text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+                        placeholder="••••••••">
+                </div>
+
+                <button
+                    type="submit"
+                    class="w-full rounded-xl bg-blue-500 py-3 font-semibold text-white hover:bg-blue-600 transition shadow-lg shadow-blue-700/30">
+                    Log In
+                </button>
+            </form>
+
+            <p class="mt-6 text-center text-sm text-slate-300">
+                Don't have an account?
+                <a th:href="@{/register}" class="text-cyan-300 hover:text-cyan-200 font-semibold">Register now</a>
+            </p>
+        </div>
+    </main>
+</body>
+</html>
