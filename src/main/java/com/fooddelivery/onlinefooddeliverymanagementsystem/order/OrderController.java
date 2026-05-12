@@ -23,9 +23,19 @@ public class OrderController {
     // ==================== Browse Menu ====================
 
     @GetMapping("/menu")
-    public String browseMenu(Model model) {
-        model.addAttribute("foodItems",
-                foodItemRepository.findByAvailableTrue());
+    public String browseMenu(
+            @RequestParam(required = false) String category,
+            Model model) {
+
+        if (category != null && !category.isEmpty()) {
+            model.addAttribute("foodItems",
+                    foodItemRepository.findByCategoryAndAvailableTrue(category));
+            model.addAttribute("activeCategory", category);
+        } else {
+            model.addAttribute("foodItems",
+                    foodItemRepository.findByAvailableTrue());
+        }
+
         model.addAttribute("categories",
                 foodItemRepository.findAll()
                         .stream()

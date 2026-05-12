@@ -42,13 +42,14 @@
   <!-- Category Filter -->
   <div class="flex flex-wrap gap-2 mb-8">
     <a href="/order/menu"
-       class="bg-orange-600 text-white px-4 py-2 rounded-full text-sm font-semibold">
+       class="px-4 py-2 rounded-full text-sm font-semibold
+              ${empty activeCategory ? 'bg-orange-600 text-white' : 'bg-white text-gray-700 border border-gray-200 hover:bg-orange-100'}">
       All
     </a>
     <c:forEach var="category" items="${categories}">
       <a href="/order/menu?category=${category}"
-         class="bg-white text-gray-700 px-4 py-2 rounded-full text-sm
-                          font-semibold hover:bg-orange-100 border border-gray-200">
+         class="px-4 py-2 rounded-full text-sm font-semibold
+                ${activeCategory == category ? 'bg-orange-600 text-white' : 'bg-white text-gray-700 border border-gray-200 hover:bg-orange-100'}">
           ${category}
       </a>
     </c:forEach>
@@ -66,7 +67,7 @@
             </c:when>
             <c:otherwise>
               <div class="w-full h-48 bg-gray-200 flex items-center
-                                            justify-center text-5xl">
+                          justify-center text-5xl">
                 🍽️
               </div>
             </c:otherwise>
@@ -75,12 +76,11 @@
             <div class="flex justify-between items-start mb-1">
               <h3 class="font-bold text-gray-800">${item.name}</h3>
               <span class="text-orange-600 font-bold">
-                                    Rs. ${item.price}
-                                </span>
+                Rs. ${item.price}
+              </span>
             </div>
             <p class="text-gray-500 text-sm mb-3">${item.description}</p>
-            <span class="bg-orange-100 text-orange-700 text-xs
-                                         px-2 py-1 rounded-full">
+            <span class="bg-orange-100 text-orange-700 text-xs px-2 py-1 rounded-full">
                 ${item.category}
             </span>
             <div class="flex items-center gap-3 mt-3">
@@ -89,8 +89,8 @@
                      name="quantity_${item.id}"
                      min="0" max="25" value="0"
                      class="w-16 border border-gray-300 rounded-lg
-                                              px-2 py-1 text-center focus:outline-none
-                                              focus:ring-2 focus:ring-orange-400"/>
+                            px-2 py-1 text-center focus:outline-none
+                            focus:ring-2 focus:ring-orange-400"/>
               <span class="text-xs text-gray-400">Max 25</span>
             </div>
           </div>
@@ -101,7 +101,7 @@
     <div class="fixed bottom-6 right-6">
       <button type="submit"
               class="bg-orange-600 text-white px-8 py-4 rounded-2xl
-                               font-bold text-lg shadow-lg hover:bg-orange-700">
+                     font-bold text-lg shadow-lg hover:bg-orange-700">
         🛒 Add to Cart
       </button>
     </div>
