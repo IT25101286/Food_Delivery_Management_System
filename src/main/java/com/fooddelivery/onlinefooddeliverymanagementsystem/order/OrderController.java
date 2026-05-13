@@ -101,7 +101,11 @@ public class OrderController {
                         entry.getKey().replace("quantity_", ""));
                 int quantity = Integer.parseInt(entry.getValue());
                 if (quantity > 0 && quantity <= 25) {
-                    cart.put(foodItemId, quantity);
+                    // ✅ if item already in cart, add to existing quantity
+                    int existingQuantity = cart.getOrDefault(foodItemId, 0);
+                    int newQuantity = existingQuantity + quantity;
+                    // cap at 25
+                    cart.put(foodItemId, Math.min(newQuantity, 25));
                 }
             }
         }
