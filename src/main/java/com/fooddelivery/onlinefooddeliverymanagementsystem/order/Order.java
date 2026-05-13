@@ -39,6 +39,10 @@ public class Order {
     @Column(nullable = false)
     private BigDecimal totalAmount;
 
+    // Delivery fees combined from all restaurants in this order
+    @Column(nullable = false)
+    private BigDecimal deliveryFee = BigDecimal.ZERO;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OrderStatus status = OrderStatus.PENDING;
@@ -68,5 +72,8 @@ public class Order {
         private String foodItemName;
         private int quantity;
         private BigDecimal price;
+        // Track which restaurant this item belongs to
+        private Long restaurantId;
+        private String restaurantName;
     }
 }

@@ -3,13 +3,13 @@ package com.fooddelivery.onlinefooddeliverymanagementsystem.order;
 import com.fooddelivery.onlinefooddeliverymanagementsystem.restaurant.FoodItem;
 import com.fooddelivery.onlinefooddeliverymanagementsystem.restaurant.FoodItemRepository;
 import com.fooddelivery.onlinefooddeliverymanagementsystem.restaurant.OrderStatus;
+import com.fooddelivery.onlinefooddeliverymanagementsystem.restaurant.Restaurant;
+import com.fooddelivery.onlinefooddeliverymanagementsystem.restaurant.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class OrderService {
@@ -23,26 +23,53 @@ public class OrderService {
     @Autowired
     private OrderSummaryService orderSummaryService;
 
+    @Autowired
+    private RestaurantRepository restaurantRepository;
+
     // ==================== Place Order ====================
 
     public Order createPendingOrder(Map<Long, Integer> cartItems) {
 
         List<Order.OrderItem> orderItems = new ArrayList<>();
-        BigDecimal total = BigDecimal.ZERO;
+        BigDecimal foodTotal = BigDecimal.ZERO;
+
+        // Track unique restaurants in this order for delivery fee
+        Set<Long> restaurantIds = new HashSet<>();
 
         for (Map.Entry<Long, Integer> entry : cartItems.entrySet()) {
             FoodItem foodItem = foodItemRepository.findById(entry.getKey())
                     .orElseThrow(() -> new RuntimeException("Food item not found!"));
 
+            // Get restaurant info for this item
+            Long restaurantId = null;
+            String restaurantName = "Unknown";
+            if (foodItem.getRestaurant() != null) {
+                restaurantId = foodItem.getRestaurant().getId();
+                restaurantName = foodItem.getRestaurant().getName();
+                restaurantIds.add(restaurantId);
+            }
+
             Order.OrderItem orderItem = new Order.OrderItem(
                     foodItem.getId(),
                     foodItem.getName(),
                     entry.getValue(),
-                    foodItem.getPrice()
+                    foodItem.getPrice(),
+                    restaurantId,
+                    restaurantName
             );
             orderItems.add(orderItem);
-            total = total.add(foodItem.getPrice()
+            foodTotal = foodTotal.add(foodItem.getPrice()
                     .multiply(BigDecimal.valueOf(entry.getValue())));
+        }
+
+        // Calculate combined delivery fee from all restaurants
+        BigDecimal totalDeliveryFee = BigDecimal.ZERO;
+        for (Long restaurantId : restaurantIds) {
+            Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                    .orElse(null);
+            if (restaurant != null) {
+                totalDeliveryFee = totalDeliveryFee.add(restaurant.getDeliveryFee());
+            }
         }
 
         Order order = new Order();
@@ -50,12 +77,13 @@ public class OrderService {
         order.setCustomerAddress("Default Address");
         order.setCustomerPhone("0000000000");
         order.setItems(orderItems);
-        order.setTotalAmount(total);
+        order.setTotalAmount(foodTotal);
+        order.setDeliveryFee(totalDeliveryFee);
         order.setStatus(OrderStatus.PENDING);
 
         // Demonstrate polymorphism
         String orderType = orderSummaryService.getOrderType(
-                orderSummaryService.createOrderByAmount(total));
+                orderSummaryService.createOrderByAmount(foodTotal));
         System.out.println("Order type: " + orderType);
 
         return orderRepository.save(order);
@@ -87,8 +115,7 @@ public class OrderService {
 
         if (order.getStatus() != OrderStatus.PENDING &&
                 order.getStatus() != OrderStatus.PAYMENT_SUCCESS) {
-            throw new RuntimeException(
-                    "Order cannot be cancelled!");
+            throw new RuntimeException("Order cannot be cancelled!");
         }
 
         order.setStatus(OrderStatus.DECLINED);
@@ -106,5 +133,28 @@ public class OrderService {
                     .multiply(BigDecimal.valueOf(entry.getValue())));
         }
         return total;
+    }
+
+    // ==================== Calculate Delivery Fee ====================
+
+    public BigDecimal calculateDeliveryFee(Map<Long, Integer> cartItems) {
+        Set<Long> restaurantIds = new HashSet<>();
+        for (Long foodItemId : cartItems.keySet()) {
+            FoodItem foodItem = foodItemRepository.findById(foodItemId)
+                    .orElse(null);
+            if (foodItem != null && foodItem.getRestaurant() != null) {
+                restaurantIds.add(foodItem.getRestaurant().getId());
+            }
+        }
+
+        BigDecimal totalDeliveryFee = BigDecimal.ZERO;
+        for (Long restaurantId : restaurantIds) {
+            Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                    .orElse(null);
+            if (restaurant != null) {
+                totalDeliveryFee = totalDeliveryFee.add(restaurant.getDeliveryFee());
+            }
+        }
+        return totalDeliveryFee;
     }
 }

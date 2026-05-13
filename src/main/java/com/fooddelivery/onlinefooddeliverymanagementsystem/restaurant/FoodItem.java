@@ -41,4 +41,10 @@ public class FoodItem {
 
     @Column(nullable = false)
     private boolean available = true;
+    // Links food item to a restaurant
+    // Restaurant management team will set this
+    // when they create food items via their dashboard
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_id")
+    private Restaurant restaurant;
 }
