@@ -5,7 +5,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Menu</title>
+  <title>${restaurant.name} — Menu</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen">
@@ -25,7 +25,23 @@
 </nav>
 
 <div class="max-w-6xl mx-auto px-6 py-10">
-  <h2 class="text-3xl font-bold text-gray-800 mb-8">Our Menu</h2>
+
+  <!-- Back Button + Restaurant Name -->
+  <div class="flex items-center gap-4 mb-6">
+    <a href="/order/restaurants"
+       class="bg-white text-gray-700 px-4 py-2 rounded-xl
+              font-semibold hover:bg-gray-200 shadow text-sm">
+      ← Back to Restaurants
+    </a>
+    <div>
+      <h2 class="text-3xl font-bold text-gray-800">
+        ${restaurant.name}
+      </h2>
+      <p class="text-sm text-gray-500">
+        🚚 Delivery fee: Rs. ${restaurant.deliveryFee}
+      </p>
+    </div>
+  </div>
 
   <!-- Success/Error -->
   <c:if test="${not empty success}">
@@ -41,22 +57,24 @@
 
   <!-- Category Filter -->
   <div class="flex flex-wrap gap-2 mb-8">
-    <a href="/order/menu"
+    <a href="/order/menu/${restaurant.id}"
        class="px-4 py-2 rounded-full text-sm font-semibold
-              ${empty activeCategory ? 'bg-orange-600 text-white' : 'bg-white text-gray-700 border border-gray-200 hover:bg-orange-100'}">
+              ${empty activeCategory ? 'bg-orange-600 text-white' :
+              'bg-white text-gray-700 border border-gray-200 hover:bg-orange-100'}">
       All
     </a>
     <c:forEach var="category" items="${categories}">
-      <a href="/order/menu?category=${category}"
+      <a href="/order/menu/${restaurant.id}?category=${category}"
          class="px-4 py-2 rounded-full text-sm font-semibold
-                ${activeCategory == category ? 'bg-orange-600 text-white' : 'bg-white text-gray-700 border border-gray-200 hover:bg-orange-100'}">
+                ${activeCategory == category ? 'bg-orange-600 text-white' :
+                'bg-white text-gray-700 border border-gray-200 hover:bg-orange-100'}">
           ${category}
       </a>
     </c:forEach>
   </div>
 
   <!-- Food Items -->
-  <form action="/order/cart" method="post">
+  <form action="/order/cart/${restaurant.id}" method="post">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
       <c:forEach var="item" items="${foodItems}">
         <div class="bg-white rounded-2xl shadow overflow-hidden">
@@ -79,8 +97,11 @@
                 Rs. ${item.price}
               </span>
             </div>
-            <p class="text-gray-500 text-sm mb-3">${item.description}</p>
-            <span class="bg-orange-100 text-orange-700 text-xs px-2 py-1 rounded-full">
+            <p class="text-gray-500 text-sm mb-3">
+                ${item.description}
+            </p>
+            <span class="bg-orange-100 text-orange-700 text-xs
+                         px-2 py-1 rounded-full">
                 ${item.category}
             </span>
             <div class="flex items-center gap-3 mt-3">
@@ -98,6 +119,7 @@
       </c:forEach>
     </div>
 
+    <!-- Add to Cart Button -->
     <div class="fixed bottom-6 right-6">
       <button type="submit"
               class="bg-orange-600 text-white px-8 py-4 rounded-2xl
