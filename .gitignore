@@ -1,0 +1,8 @@
+# IDE files
+.idea/
+.DS_Store
+src/.DS_Store
+
+# Compiled files — never commit these
+target/
+*.class
