@@ -13,9 +13,9 @@
 <nav class="bg-orange-600 text-white px-6 py-4 flex justify-between items-center shadow-md">
   <h1 class="text-2xl font-bold">🍔 Food Delivery</h1>
   <div class="flex gap-4">
-    <a href="/order/menu"
+    <a href="/order/restaurants"
        class="bg-white text-orange-600 px-4 py-2 rounded-lg font-semibold hover:bg-orange-50">
-      Menu
+      Restaurants
     </a>
     <a href="/order/history"
        class="bg-white text-orange-600 px-4 py-2 rounded-lg font-semibold hover:bg-orange-50">
@@ -94,9 +94,9 @@
                           font-bold hover:bg-orange-700">
         View Order Details
       </a>
-      <a href="/order/menu"
+      <a href="/order/restaurants"
          class="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl
-                          font-semibold hover:bg-gray-200">
+          font-semibold hover:bg-gray-200">
         Order More Food
       </a>
     </div>
