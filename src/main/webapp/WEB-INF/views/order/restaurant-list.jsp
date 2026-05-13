@@ -54,13 +54,15 @@
                 <!-- Restaurant Image -->
                 <c:choose>
                     <c:when test="${not empty restaurant.imageUrl}">
-                        <img src="${restaurant.imageUrl}"
-                             alt="${restaurant.name}"
-                             class="w-full h-48 object-cover"/>
+                        <div class="w-full h-48 bg-gray-50 flex items-center justify-center p-6">
+                            <img src="${restaurant.imageUrl}"
+                                 alt="${restaurant.name}"
+                                 class="h-full w-full object-contain"/>
+                        </div>
                     </c:when>
                     <c:otherwise>
                         <div class="w-full h-48 bg-gray-200 flex items-center
-                        justify-center text-6xl">
+                justify-center text-6xl">
                             🍽️
                         </div>
                     </c:otherwise>
