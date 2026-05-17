@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Premium Delivery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        premium: {
+                            bg: '#0F1115',
+                            surface: '#1A1D23',
+                            accent: '#C9A14A',
+                            text: '#F5F5F5',
+                            muted: '#A8A8A8',
+                            border: 'rgba(255,255,255,0.08)'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .premium-glow:hover {
+            box-shadow: 0 0 20px rgba(201, 161, 74, 0.15);
+        }
+    </style>
+</head>
+
+<body class="bg-premium-bg min-h-screen text-premium-text relative overflow-x-hidden focus:outline-none">
+
+    <!-- Ambient Blur -->
+    <div
+        class="fixed top-0 left-1/4 w-[600px] h-[600px] bg-premium-accent/5 rounded-full blur-[120px] -z-10 pointer-events-none">
+    </div>
+
+    <!-- Navigation -->
+    <div th:replace="fragments/nav :: nav"></div>
+
+    <!-- Premium Hero Section -->
+    <div class="w-full relative h-[250px] border-b border-premium-border mb-8">
+        <img src="/images/luxury_delivery.png" alt="Luxury Delivery" class="w-full h-full object-cover opacity-30">
+        <div class="absolute inset-0 bg-gradient-to-t from-premium-bg to-transparent"></div>
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div class="text-center">
+                <h1 class="text-5xl font-bold text-premium-text mb-3 tracking-tight">Executive <span
+                        class="text-premium-accent">Dashboard</span></h1>
+                <p class="text-premium-muted text-lg font-light tracking-wide">Monitor real-time premium deliveries and
+                    logistics</p>
+            </div>
+        </div>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 pb-12 relative z-10">
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+            <!-- Total Deliveries Card -->
+            <div
+                class="bg-premium-surface border border-premium-border rounded-2xl p-6 shadow-xl premium-glow transition duration-300 group">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-premium-muted text-sm mb-2 font-medium tracking-wide uppercase">Deliveries Today
+                        </p>
+                        <p class="text-4xl font-light text-premium-text" th:text="${totalDeliveriesToday}">0</p>
+                    </div>
+                    <div
+                        class="w-12 h-12 bg-[#0F1115] border border-premium-border rounded-xl flex items-center justify-center group-hover:border-premium-accent transition duration-300">
+                        <span class="text-2xl text-premium-accent">📦</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Card -->
+            <div
+                class="bg-premium-surface border border-premium-border rounded-2xl p-6 shadow-xl premium-glow transition duration-300 group">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-premium-muted text-sm mb-2 font-medium tracking-wide uppercase">Pending</p>
+                        <p class="text-4xl font-light text-yellow-500" th:text="${pendingCount}">0</p>
+                    </div>
+                    <div
+                        class="w-12 h-12 bg-[#0F1115] border border-premium-border rounded-xl flex items-center justify-center group-hover:border-yellow-500 transition duration-300">
+                        <span class="text-2xl text-yellow-500">⏳</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- On The Way Card -->
+            <div
+                class="bg-premium-surface border border-premium-border rounded-2xl p-6 shadow-xl premium-glow transition duration-300 group">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-premium-muted text-sm mb-2 font-medium tracking-wide uppercase">En Route</p>
+                        <p class="text-4xl font-light text-cyan-400" th:text="${onTheWayCount}">0</p>
+                    </div>
+                    <div
+                        class="w-12 h-12 bg-[#0F1115] border border-premium-border rounded-xl flex items-center justify-center group-hover:border-cyan-400 transition duration-300">
+                        <span class="text-2xl text-cyan-400">🚗</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delivered Card -->
+            <div
+                class="bg-premium-surface border border-premium-border rounded-2xl p-6 shadow-xl premium-glow transition duration-300 group">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-premium-muted text-sm mb-2 font-medium tracking-wide uppercase">Completed</p>
+                        <p class="text-4xl font-light text-emerald-500" th:text="${deliveredCount}">0</p>
+                    </div>
+                    <div
+                        class="w-12 h-12 bg-[#0F1115] border border-premium-border rounded-xl flex items-center justify-center group-hover:border-emerald-500 transition duration-300">
+                        <span class="text-2xl text-emerald-500">✓</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="bg-premium-surface border border-premium-border rounded-2xl p-8 shadow-xl">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-2xl font-semibold text-premium-text tracking-tight">Recent Orders</h2>
+                <a href="/admin/orders"
+                    class="text-premium-accent hover:text-yellow-400 transition text-sm font-semibold tracking-wide uppercase">View
+                    All →</a>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-premium-border">
+                            <th class="py-4 px-4 text-premium-muted font-medium text-sm tracking-wider uppercase">Order
+                                Ref</th>
+                            <th class="py-4 px-4 text-premium-muted font-medium text-sm tracking-wider uppercase">
+                                Customer</th>
+                            <th class="py-4 px-4 text-premium-muted font-medium text-sm tracking-wider uppercase">
+                                Restaurant</th>
+                            <th class="py-4 px-4 text-premium-muted font-medium text-sm tracking-wider uppercase">Status
+                            </th>
+                            <th class="py-4 px-4 text-premium-muted font-medium text-sm tracking-wider uppercase">
+                                Delivery Partner</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-premium-border/50">
+                        <tr th:each="order : ${recentOrders}" class="hover:bg-premium-bg/30 transition duration-200">
+                            <td class="py-5 px-4 text-premium-text font-medium tracking-wide"
+                                th:text="${order.orderRef}">FD-2045</td>
+                            <td class="py-5 px-4 text-premium-muted" th:text="${order.customerName}">Customer</td>
+                            <td class="py-5 px-4 text-premium-muted" th:text="${order.restaurantName}">Restaurant</td>
+                            <td class="py-5 px-4">
+                                <span
+                                    class="inline-block border border-premium-border bg-[#0F1115] px-4 py-1 flex-none rounded-full text-xs font-semibold uppercase tracking-wider"
+                                    th:classappend="${'text-' + order.status.badgeColor + '-400 border-' + order.status.badgeColor + '-500/30'}"
+                                    th:text="${order.status.displayName}">Status</span>
+                            </td>
+                            <td class="py-5 px-4 text-premium-muted">
+                                <div th:if="${order.deliveryPerson}" class="flex items-center gap-2">
+                                    <div
+                                        class="w-6 h-6 rounded-full bg-premium-accent/20 border border-premium-accent/50 flex items-center justify-center">
+                                        <span class="text-xs text-premium-accent">👤</span>
+                                    </div>
+                                    <span th:text="${order.deliveryPerson.name}"></span>
+                                </div>
+                                <span th:unless="${order.deliveryPerson}"
+                                    class="text-premium-muted/50 italic">Unassigned</span>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(recentOrders)}">
+                            <td colspan="5" class="py-12 text-center text-premium-muted">No orders available gracefully
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <h2 class="text-xl font-semibold text-premium-text tracking-tight mt-12 mb-6">Quick Actions</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <a href="/admin/orders"
+                class="group bg-premium-surface border border-premium-border hover:border-premium-accent rounded-2xl p-6 transition duration-300 relative overflow-hidden">
+                <div
+                    class="absolute inset-0 bg-gradient-to-br from-premium-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition duration-300">
+                </div>
+                <div class="relative z-10">
+                    <div class="text-3xl mb-4 text-premium-accent">📋</div>
+                    <h3
+                        class="font-medium text-lg text-premium-text tracking-wide group-hover:text-premium-accent transition">
+                        Manage Orders</h3>
+                    <p class="text-sm text-premium-muted mt-2 font-light">Monitor and update delivery statuses</p>
+                </div>
+            </a>
+
+            <a href="/admin/delivery-persons"
+                class="group bg-premium-surface border border-premium-border hover:border-blue-500/50 rounded-2xl p-6 transition duration-300 relative overflow-hidden">
+                <div
+                    class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition duration-300">
+                </div>
+                <div class="relative z-10">
+                    <div class="text-3xl mb-4 text-blue-400">👥</div>
+                    <h3
+                        class="font-medium text-lg text-premium-text tracking-wide group-hover:text-blue-400 transition">
+                        Logistics Team</h3>
+                    <p class="text-sm text-premium-muted mt-2 font-light">Manage delivery personnel and performance</p>
+                </div>
+            </a>
+
+            <a href="/admin/delivery-persons/new"
+                class="group bg-premium-surface border border-premium-border hover:border-emerald-500/50 rounded-2xl p-6 transition duration-300 relative overflow-hidden">
+                <div
+                    class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition duration-300">
+                </div>
+                <div class="relative z-10">
+                    <div class="text-3xl mb-4 text-emerald-400">➕</div>
+                    <h3
+                        class="font-medium text-lg text-premium-text tracking-wide group-hover:text-emerald-400 transition">
+                        Onboard Partner</h3>
+                    <p class="text-sm text-premium-muted mt-2 font-light">Register a new delivery professional</p>
+                </div>
+            </a>
+        </div>
+    </main>
+</body>
+
+</html>

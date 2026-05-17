@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Order - Premium Delivery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        premium: {
+                            bg: '#0F1115',
+                            surface: '#1A1D23',
+                            accent: '#C9A14A',
+                            text: '#F5F5F5',
+                            muted: '#A8A8A8',
+                            border: 'rgba(255,255,255,0.08)'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-premium-bg min-h-screen text-premium-text relative overflow-x-hidden focus:outline-none">
+
+    <div
+        class="fixed top-20 right-1/4 w-[500px] h-[500px] bg-premium-accent/5 rounded-full blur-[100px] -z-10 pointer-events-none">
+    </div>
+
+    <!-- Navigation -->
+    <div th:replace="fragments/nav :: nav"></div>
+
+    <main class="max-w-2xl mx-auto px-4 py-12 relative z-10">
+        <!-- Page Header -->
+        <div class="mb-10 text-center">
+            <a href="/admin/orders"
+                class="text-premium-accent hover:text-yellow-400 transition mb-6 inline-flex items-center gap-2 font-medium tracking-wide text-sm uppercase">
+                <span>←</span> Back to Orders
+            </a>
+            <h1 class="text-4xl font-bold text-premium-text tracking-tight">Assign <span
+                    class="text-premium-accent">Partner</span></h1>
+        </div>
+
+        <!-- Assignment Card -->
+        <div class="bg-premium-surface border border-premium-border rounded-3xl p-10 shadow-2xl">
+            <!-- Order Details -->
+            <div class="mb-10 pb-8 border-b border-premium-border/50">
+                <h2 class="text-xl font-semibold text-premium-text mb-6 tracking-wide">Order Specifications</h2>
+                <div class="grid grid-cols-2 gap-6 bg-[#0F1115]/80 p-8 rounded-2xl border border-premium-border">
+                    <div>
+                        <p class="text-premium-muted text-xs font-semibold mb-1 tracking-widest uppercase">Reference</p>
+                        <p class="text-premium-text font-medium text-lg" th:text="${order.orderRef}">FD-2045</p>
+                    </div>
+                    <div>
+                        <p class="text-premium-muted text-xs font-semibold mb-1 tracking-widest uppercase">Customer</p>
+                        <p class="text-premium-text font-medium text-lg" th:text="${order.customerName}">Customer Name
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-premium-muted text-xs font-semibold mb-1 tracking-widest uppercase">Establisment
+                        </p>
+                        <p class="text-premium-text font-medium text-lg" th:text="${order.restaurantName}">Restaurant
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-premium-muted text-xs font-semibold mb-1 tracking-widest uppercase">Timing</p>
+                        <p class="text-premium-text font-medium text-lg text-emerald-400"
+                            th:text="${order.estimatedMinutes + ' mins'}">Time</p>
+                    </div>
+                    <div class="col-span-2 mt-2">
+                        <p class="text-premium-muted text-xs font-semibold mb-1 tracking-widest uppercase">Destination
+                        </p>
+                        <p class="text-premium-text font-medium text-lg" th:text="${order.deliveryAddress}">Address</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assignment Form -->
+            <form method="post" th:action="@{/admin/orders/{id}/assign(id=${order.id})}" class="space-y-8">
+                <div>
+                    <label for="deliveryPersonId"
+                        class="block text-sm font-semibold text-premium-muted mb-4 uppercase tracking-widest">
+                        Available Partners
+                    </label>
+                    <div class="relative">
+                        <select name="deliveryPersonId" id="deliveryPersonId" required
+                            class="w-full bg-premium-bg border border-premium-border text-premium-text rounded-xl px-5 py-4 appearance-none focus:outline-none focus:border-premium-accent focus:ring-1 focus:ring-premium-accent transition shadow-inner font-medium text-lg">
+                            <option value="">-- Select Premium Partner --</option>
+                            <option th:each="person : ${deliveryPersons}" th:value="${person.id}"
+                                th:text="${person.name + ' - ' + person.vehicleNumber}">Person</option>
+                        </select>
+                        <div
+                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-6 text-premium-accent">
+                            <svg class="fill-current h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4 pt-6 mt-6 border-t border-premium-border/50">
+                    <button type="submit"
+                        class="flex-1 bg-premium-accent hover:bg-yellow-600 text-[#0F1115] font-bold py-4 rounded-xl shadow-lg hover:shadow-premium-accent/20 transition duration-300 tracking-wide">
+                        Confirm Assignment
+                    </button>
+                    <a href="/admin/orders"
+                        class="flex-1 bg-transparent border border-premium-border hover:bg-premium-bg text-premium-muted hover:text-premium-text font-medium py-4 rounded-xl transition duration-300 text-center tracking-wide">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+
+</html>
