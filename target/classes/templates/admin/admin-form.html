@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${isEdit} ? 'Edit Admin - FoodDelivery' : 'New Admin - FoodDelivery'">Admin Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            100: '#F5F5F5',
+                            300: '#A8A8A8',
+                            400: '#A8A8A8',
+                            500: '#A8A8A8',
+                            600: '#1A1D23',
+                            700: '#1A1D23',
+                            800: '#1A1D23',
+                            900: '#1A1D23',
+                            950: '#0F1115'
+                        },
+                        blue: {
+                            300: '#C9A14A',
+                            400: '#C9A14A',
+                            500: '#C9A14A',
+                            600: '#b08d41',
+                            950: '#0F1115'
+                        },
+                        cyan: {
+                            200: '#C9A14A',
+                            300: '#C9A14A',
+                            400: '#C9A14A',
+                            500: '#C9A14A',
+                            950: '#0F1115'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .border-blue-500\/20,
+        .border-blue-500\/30,
+        .border-slate-800\/50,
+        .border-blue-500\/40,
+        .border-cyan-500\/40 {
+            border-color: rgba(255, 255, 255, 0.08) !important;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-slate-950 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-4 sm:p-6 relative">
+
+    <div class="absolute top-0 left-0 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-cyan-300/20 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto">
+
+        <div th:replace="~{fragments/nav :: nav}"></div>
+
+        <div class="max-w-2xl mx-auto">
+
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-100"
+                        th:text="${isEdit} ? 'Edit Admin' : 'Create New Admin'">Admin Form</h1>
+                    <p class="text-slate-400 text-sm mt-0.5"
+                       th:text="${isEdit} ? 'Update administrator details' : 'Add a new administrator to the system'"></p>
+                </div>
+                <a th:href="@{/admin/admins}"
+                   class="text-slate-400 hover:text-cyan-300 text-sm transition-colors flex items-center gap-1">
+                    &larr; Back to list
+                </a>
+            </div>
+
+            <div class="bg-slate-900/60 border border-blue-500/20 rounded-2xl p-6 sm:p-8">
+
+                <form th:action="${isEdit} ? '/admin/admins/' + ${adminId} + '/edit' : '/admin/admins'"
+                      th:object="${adminForm}"
+                      method="post"
+                      class="space-y-5">
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-slate-300 text-sm font-medium mb-2 block">
+                                Full Name <span class="text-red-400">*</span>
+                            </label>
+                            <input type="text" th:field="*{name}" required
+                                   placeholder="John Doe"
+                                   class="w-full bg-slate-800 border border-blue-500/30 text-slate-100 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-slate-500 transition-all">
+                        </div>
+                        <div>
+                            <label class="text-slate-300 text-sm font-medium mb-2 block">Phone Number</label>
+                            <input type="tel" th:field="*{phone}"
+                                   placeholder="+1 234 567 8900"
+                                   class="w-full bg-slate-800 border border-blue-500/30 text-slate-100 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-slate-500 transition-all">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-slate-300 text-sm font-medium mb-2 block">
+                            Email Address <span class="text-red-400">*</span>
+                        </label>
+                        <input type="email" th:field="*{email}" required
+                               placeholder="admin@food.com"
+                               class="w-full bg-slate-800 border border-blue-500/30 text-slate-100 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-slate-500 transition-all">
+                    </div>
+
+                    <div>
+                        <label class="text-slate-300 text-sm font-medium mb-2 block">
+                            Password
+                            <span th:if="${!isEdit}" class="text-red-400">*</span>
+                            <span th:if="${isEdit}" class="text-slate-500 font-normal">(leave blank to keep current password)</span>
+                        </label>
+                        <input type="password" th:field="*{password}"
+                               th:required="${!isEdit}"
+                               placeholder="Minimum 8 characters"
+                               class="w-full bg-slate-800 border border-blue-500/30 text-slate-100 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-slate-500 transition-all">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-slate-300 text-sm font-medium mb-2 block">
+                                Admin Role <span class="text-red-400">*</span>
+                            </label>
+                            <select th:field="*{adminRole}" required
+                                    class="w-full bg-slate-800 border border-blue-500/30 text-slate-100 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                                <option value="" th:unless="${isEdit}">Select a role</option>
+                                <option th:each="role : ${roles}"
+                                        th:value="${role}"
+                                        th:text="${role}"></option>
+                            </select>
+                        </div>
+                        <div class="flex items-end pb-1">
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <div class="relative">
+                                    <input type="checkbox" th:field="*{active}"
+                                           class="sr-only peer">
+                                    <div class="w-11 h-6 bg-slate-700 peer-checked:bg-blue-500 rounded-full transition-colors peer-focus:ring-2 peer-focus:ring-blue-500 peer-focus:ring-offset-2 peer-focus:ring-offset-slate-900"></div>
+                                    <div class="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-all peer-checked:translate-x-5 shadow-sm"></div>
+                                </div>
+                                <span class="text-slate-300 text-sm font-medium group-hover:text-slate-100 transition-colors">Active Account</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="pt-2 flex gap-3">
+                        <button type="submit"
+                                class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-xl transition-colors shadow-lg shadow-blue-500/20"
+                                th:text="${isEdit} ? 'Update Admin' : 'Create Admin'">
+                            Submit
+                        </button>
+                        <a th:href="@{/admin/admins}"
+                           class="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-slate-300 font-medium rounded-xl transition-colors text-sm flex items-center">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <div th:if="${isEdit}" class="mt-4 bg-slate-900/40 border border-red-500/20 rounded-2xl p-5">
+                <h3 class="text-slate-300 text-sm font-semibold mb-3">Danger Zone</h3>
+                <div class="flex items-center justify-between flex-wrap gap-3">
+                    <div>
+                        <p class="text-slate-400 text-sm">Permanently delete this admin account.</p>
+                        <p class="text-slate-500 text-xs mt-0.5">This action cannot be undone.</p>
+                    </div>
+                    <form th:action="@{/admin/admins/{id}/delete(id=${adminId})}"
+                          method="post"
+                          onsubmit="return confirm('Delete this admin permanently?')">
+                        <button type="submit"
+                                class="bg-red-500/20 hover:bg-red-500/40 border border-red-500/40 text-red-300 text-sm font-medium px-4 py-2 rounded-xl transition-colors">
+                            Delete Account
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
