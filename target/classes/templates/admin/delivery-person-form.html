@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${isEdit ? 'Edit' : 'Create'} + ' Logistics Partner - Premium Delivery'">Create Partner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        premium: {
+                            bg: '#0F1115',
+                            surface: '#1A1D23',
+                            accent: '#C9A14A',
+                            text: '#F5F5F5',
+                            muted: '#A8A8A8',
+                            border: 'rgba(255,255,255,0.08)'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-premium-bg min-h-screen text-premium-text relative overflow-x-hidden focus:outline-none">
+
+    <div
+        class="fixed top-20 right-1/4 w-[500px] h-[500px] bg-premium-accent/5 rounded-full blur-[100px] -z-10 pointer-events-none">
+    </div>
+
+    <!-- Navigation -->
+    <div th:replace="fragments/nav :: nav"></div>
+
+    <main class="max-w-2xl mx-auto px-4 py-12 relative z-10">
+        <!-- Page Header -->
+        <div class="mb-10 text-center">
+            <a href="/admin/delivery-persons"
+                class="text-premium-accent hover:text-yellow-400 transition mb-6 inline-flex items-center gap-2 font-medium tracking-wide text-sm uppercase">
+                <span>←</span> Back to Team
+            </a>
+            <h1 class="text-4xl font-bold text-premium-text tracking-tight"
+                th:text="${isEdit ? 'Edit Logistics Partner' : 'Onboard Partner'}">Form</h1>
+        </div>
+
+        <!-- Error Message -->
+        <div th:if="${error}" class="mb-6 bg-red-900/30 border border-red-500/40 text-red-300 rounded-2xl px-6 py-4 text-sm font-medium text-center" th:text="${error}"></div>
+
+        <!-- Form Card -->
+        <div class="bg-premium-surface border border-premium-border rounded-3xl p-10 shadow-2xl">
+            <form
+                th:action="${isEdit} ? @{/admin/delivery-persons/{id}/edit(id=${person.id != null ? person.id : 0})} : @{/admin/delivery-persons/new}"
+                method="post" class="space-y-6 flex flex-col">
+                <!-- Name -->
+                <div>
+                    <label for="name"
+                        class="block text-xs font-semibold text-premium-muted mb-2 uppercase tracking-widest">Full
+                        Name</label>
+                    <input type="text" name="name" id="name" required th:value="${person.name}"
+                        class="w-full bg-premium-bg border border-premium-border text-premium-text rounded-xl px-5 py-3 focus:outline-none focus:border-premium-accent focus:ring-1 focus:ring-premium-accent transition shadow-inner font-medium text-lg"
+                        placeholder="e.g. John Doe">
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label for="email"
+                        class="block text-xs font-semibold text-premium-muted mb-2 uppercase tracking-widest">Email</label>
+                    <input type="email" name="email" id="email" required th:value="${person.email}"
+                        class="w-full bg-premium-bg border border-premium-border text-premium-text rounded-xl px-5 py-3 focus:outline-none focus:border-premium-accent focus:ring-1 focus:ring-premium-accent transition shadow-inner font-medium text-lg"
+                        placeholder="john@delivery.com">
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <label for="password"
+                        class="block text-xs font-semibold text-premium-muted mb-2 uppercase tracking-widest"
+                        th:text="${isEdit ? 'Update Password (leave empty to keep current)' : 'Account Password'}">Password</label>
+                    <input type="password" name="password" id="password" th:required="${!isEdit}"
+                        class="w-full bg-premium-bg border border-premium-border text-premium-text rounded-xl px-5 py-3 focus:outline-none focus:border-premium-accent focus:ring-1 focus:ring-premium-accent transition shadow-inner font-medium text-lg"
+                        placeholder="••••••••">
+                </div>
+
+                <!-- Phone -->
+                <div>
+                    <label for="phone"
+                        class="block text-xs font-semibold text-premium-muted mb-2 uppercase tracking-widest">Contact
+                        Number</label>
+                    <input type="tel" name="phone" id="phone" required th:value="${person.phone}"
+                        class="w-full bg-premium-bg border border-premium-border text-premium-text rounded-xl px-5 py-3 focus:outline-none focus:border-premium-accent focus:ring-1 focus:ring-premium-accent transition shadow-inner font-medium text-lg"
+                        placeholder="Phone Number">
+                </div>
+
+                <!-- Vehicle Number -->
+                <div>
+                    <label for="vehicleNumber"
+                        class="block text-xs font-semibold text-premium-muted mb-2 uppercase tracking-widest">Vehicle
+                        Registration</label>
+                    <input type="text" name="vehicleNumber" id="vehicleNumber" required
+                        th:value="${person.vehicleNumber}"
+                        class="w-full bg-premium-bg border border-premium-border text-premium-text rounded-xl px-5 py-3 focus:outline-none focus:border-premium-accent focus:ring-1 focus:ring-premium-accent transition shadow-inner font-medium text-lg uppercase"
+                        placeholder="XY-0000">
+                </div>
+
+                <!-- Availability -->
+                <div class="pt-4 pb-2">
+                    <label for="available"
+                        class="inline-flex items-center gap-4 cursor-pointer p-4 border border-premium-border bg-premium-bg/50 rounded-2xl w-full transition hover:border-premium-accent/50 group">
+                        <input type="checkbox" name="available" id="available" th:checked="${person.available}"
+                            class="w-5 h-5 rounded border-premium-border accent-premium-accent bg-premium-bg">
+                        <span
+                            class="text-premium-text font-medium text-sm tracking-wide group-hover:text-premium-accent transition duration-300">Set
+                            Partner Available for Deliveries</span>
+                    </label>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 pt-4 mt-6 border-t border-premium-border/50">
+                    <button type="submit"
+                        class="flex-1 bg-premium-accent hover:bg-yellow-600 text-[#0F1115] font-bold py-4 rounded-xl shadow-lg hover:shadow-premium-accent/20 transition duration-300 tracking-wide"
+                        th:text="${isEdit ? 'Confirm Update' : 'Onboard Partner'}">Submit</button>
+                    <a href="/admin/delivery-persons"
+                        class="flex-1 bg-transparent border border-premium-border hover:bg-premium-bg text-premium-muted hover:text-premium-text font-medium py-4 rounded-xl transition duration-300 text-center tracking-wide">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+
+</html>

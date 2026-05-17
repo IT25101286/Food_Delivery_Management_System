@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | FoodDelivery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#0F1115] text-[#F5F5F5] min-h-screen antialiased">
+    <div class="absolute inset-0 -z-10 bg-gradient-to-br from-[#0F1115] via-[#15181E] to-[#1A1D23]"></div>
+    <div class="absolute -top-24 -right-24 h-80 w-80 rounded-full bg-[#C9A14A]/14 blur-3xl"></div>
+    <div class="absolute -bottom-20 -left-20 h-80 w-80 rounded-full bg-[#C9A14A]/10 blur-3xl"></div>
+
+    <header class="max-w-7xl mx-auto px-6 py-6">
+        <nav class="flex items-center justify-between rounded-2xl bg-[#1A1D23]/95 border border-[rgba(255,255,255,0.08)] px-5 py-4 backdrop-blur shadow-xl shadow-black/35">
+            <div class="flex items-center gap-2">
+                <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-r from-[#C9A14A] to-[#D4B167] text-[#F5F5F5] font-bold">FD</span>
+                <span class="font-extrabold text-xl tracking-tight">FoodDelivery</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <a th:href="@{/}" class="px-4 py-2 rounded-lg text-sm font-semibold text-[#C9A14A] hover:bg-[#C9A14A]/20 transition">Home</a>
+                <a th:href="@{/login}" class="px-4 py-2 rounded-lg text-sm font-semibold bg-[#C9A14A] text-[#F5F5F5] hover:bg-[#B89240] transition">Login</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-10">
+        <div class="max-w-xl mx-auto rounded-3xl bg-[#1A1D23]/95 border border-[rgba(255,255,255,0.08)] p-8 shadow-2xl shadow-black/45">
+            <h1 class="text-3xl font-black text-[#F5F5F5] text-center">Create Your Account</h1>
+            <p class="text-center text-[#A8A8A8] mt-2">Join FoodDelivery and start ordering in seconds</p>
+
+            <form th:action="@{/register}" th:object="${user}" method="post" class="mt-7 space-y-5">
+                <div>
+                    <label class="block text-sm font-semibold text-[#F5F5F5] mb-2">Name</label>
+                    <input
+                        type="text"
+                        th:field="*{name}"
+                        required
+                        class="w-full rounded-xl bg-[#0F1115]/70 border border-[rgba(255,255,255,0.08)] px-4 py-3 text-[#F5F5F5] placeholder-[#A8A8A8] focus:outline-none focus:ring-2 focus:ring-[#C9A14A] focus:border-[#C9A14A]"
+                        placeholder="Your full name">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-[#F5F5F5] mb-2">Email</label>
+                    <input
+                        type="email"
+                        th:field="*{email}"
+                        required
+                        class="w-full rounded-xl bg-[#0F1115]/70 border border-[rgba(255,255,255,0.08)] px-4 py-3 text-[#F5F5F5] placeholder-[#A8A8A8] focus:outline-none focus:ring-2 focus:ring-[#C9A14A] focus:border-[#C9A14A]"
+                        placeholder="you@example.com">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-[#F5F5F5] mb-2">Phone Number</label>
+                    <input
+                        type="text"
+                        th:field="*{phone}"
+                        class="w-full rounded-xl bg-[#0F1115]/70 border border-[rgba(255,255,255,0.08)] px-4 py-3 text-[#F5F5F5] placeholder-[#A8A8A8] focus:outline-none focus:ring-2 focus:ring-[#C9A14A] focus:border-[#C9A14A]"
+                        placeholder="07X XXX XXXX">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-[#F5F5F5] mb-2">Password</label>
+                    <input
+                        type="password"
+                        th:field="*{password}"
+                        required
+                        minlength="6"
+                        class="w-full rounded-xl bg-[#0F1115]/70 border border-[rgba(255,255,255,0.08)] px-4 py-3 text-[#F5F5F5] placeholder-[#A8A8A8] focus:outline-none focus:ring-2 focus:ring-[#C9A14A] focus:border-[#C9A14A]"
+                        placeholder="At least 6 characters">
+                </div>
+
+                <button
+                    type="submit"
+                    class="w-full rounded-xl bg-[#C9A14A] py-3 font-semibold text-[#F5F5F5] hover:bg-[#B89240] transition shadow-lg shadow-black/35">
+                    Create Account
+                </button>
+            </form>
+
+            <p class="mt-6 text-center text-sm text-[#A8A8A8]">
+                Already have an account?
+                <a th:href="@{/login}" class="text-[#C9A14A] hover:text-[#C9A14A] font-semibold">Log in</a>
+            </p>
+        </div>
+    </main>
+</body>
+</html>
