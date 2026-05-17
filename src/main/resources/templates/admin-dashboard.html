@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | FoodDelivery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#0F1115] text-[#F5F5F5] min-h-screen antialiased">
+    <div class="absolute inset-0 -z-10 bg-gradient-to-br from-[#0F1115] via-[#15181E] to-[#1A1D23]"></div>
+
+    <header class="max-w-7xl mx-auto px-6 py-6">
+        <nav class="flex items-center justify-between rounded-2xl bg-[#1A1D23]/95 border border-[rgba(255,255,255,0.08)] px-5 py-4 backdrop-blur">
+            <div class="flex items-center gap-2">
+                <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-r from-[#C9A14A] to-[#D4B167] text-[#F5F5F5] font-bold">FD</span>
+                <span class="font-extrabold text-xl tracking-tight">Admin Dashboard</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <a th:href="@{/}" class="px-4 py-2 rounded-lg text-sm font-semibold text-[#C9A14A] hover:bg-[#C9A14A]/20 transition">Home</a>
+                <a th:href="@{/profile}" class="px-4 py-2 rounded-lg text-sm font-semibold text-[#C9A14A] hover:bg-[#C9A14A]/20 transition">Profile</a>
+                <form th:action="@{/logout}" method="post" class="inline">
+                    <button type="submit" class="px-4 py-2 rounded-lg text-sm font-semibold bg-[#C9A14A] text-[#F5F5F5] hover:bg-[#B89240] transition">Logout</button>
+                </form>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 pb-12">
+        <section class="rounded-3xl bg-[#1A1D23]/92 border border-[rgba(255,255,255,0.08)] p-8 shadow-2xl shadow-black/35">
+            <p class="inline-flex rounded-full bg-[#C9A14A]/10 border border-[rgba(255,255,255,0.08)] px-3 py-1 text-xs font-semibold text-[#C9A14A]">ADMIN CONTROL CENTER</p>
+            <h1 class="text-3xl md:text-4xl font-black mt-4">Manage Your Platform with Confidence</h1>
+            <p class="text-[#A8A8A8] mt-3 max-w-2xl">Monitor users, review system metrics, and keep operations smooth with a modern management workspace.</p>
+        </section>
+
+        <section class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="rounded-2xl bg-[#1A1D23]/92 border border-[rgba(255,255,255,0.08)] p-5">
+                <p class="text-sm text-[#A8A8A8]">Total Users</p>
+                <p class="text-3xl font-black mt-2 text-[#F5F5F5]" th:text="${stats.totalUsers}">0</p>
+                <p class="text-xs text-[#C9A14A] mt-2">Registered accounts</p>
+            </div>
+            <div class="rounded-2xl bg-[#1A1D23]/92 border border-[rgba(255,255,255,0.08)] p-5">
+                <p class="text-sm text-[#A8A8A8]">Active Orders</p>
+                <p class="text-3xl font-black mt-2 text-[#F5F5F5]" th:text="${stats.activeOrders}">0</p>
+                <p class="text-xs text-[#C9A14A] mt-2">Not delivered/cancelled</p>
+            </div>
+            <div class="rounded-2xl bg-[#1A1D23]/92 border border-[rgba(255,255,255,0.08)] p-5">
+                <p class="text-sm text-[#A8A8A8]">Delivery Addresses</p>
+                <p class="text-3xl font-black mt-2 text-[#F5F5F5]" th:text="${stats.totalAddresses}">0</p>
+                <p class="text-xs text-[#C9A14A] mt-2">Saved address entries</p>
+            </div>
+            <div class="rounded-2xl bg-[#1A1D23]/92 border border-[rgba(255,255,255,0.08)] p-5">
+                <p class="text-sm text-[#A8A8A8]">Orders Today</p>
+                <p class="text-3xl font-black mt-2 text-[#F5F5F5]" th:text="${stats.ordersToday}">0</p>
+                <p class="text-xs text-[#C9A14A] mt-2">Placed since midnight</p>
+            </div>
+        </section>
+
+        <section class="mt-8 grid lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 rounded-2xl bg-[#1A1D23]/92 border border-[rgba(255,255,255,0.08)] p-6">
+                <h2 class="text-xl font-bold text-[#F5F5F5]">Quick Admin Actions</h2>
+                <p class="text-sm text-[#A8A8A8] mt-1">Use these shortcuts to manage users and core operations.</p>
+                <div class="mt-5 grid sm:grid-cols-2 gap-4">
+                    <a th:href="@{/admin/users}" class="rounded-xl bg-[#C9A14A]/15 border border-[rgba(255,255,255,0.08)] p-4 hover:bg-[#C9A14A]/25 transition">
+                        <p class="font-semibold text-[#C9A14A]">Manage Users</p>
+                        <p class="text-sm text-[#A8A8A8] mt-1">View, update, create, and remove accounts.</p>
+                    </a>
+                    <a th:href="@{/admin/users}" class="rounded-xl bg-[#C9A14A]/15 border border-[rgba(255,255,255,0.08)] p-4 hover:bg-[#C9A14A]/25 transition">
+                        <p class="font-semibold text-[#C9A14A]">Review User Activity</p>
+                        <p class="text-sm text-[#A8A8A8] mt-1">Track onboarding and account changes.</p>
+                    </a>
+                    <div class="rounded-xl bg-[#0F1115]/70 border border-[rgba(255,255,255,0.08)] p-4">
+                        <p class="font-semibold text-[#F5F5F5]">Security Status</p>
+                        <p class="text-sm text-[#A8A8A8] mt-1">Session authentication enabled and running securely.</p>
+                    </div>
+                    <div class="rounded-xl bg-[#0F1115]/70 border border-[rgba(255,255,255,0.08)] p-4">
+                        <p class="font-semibold text-[#F5F5F5]">System Health</p>
+                        <p class="text-sm text-[#A8A8A8] mt-1">Database and API services are operational.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rounded-2xl bg-[#1A1D23]/92 border border-[rgba(255,255,255,0.08)] p-6">
+                <h2 class="text-xl font-bold text-[#F5F5F5]">Admin Tips</h2>
+                <ul class="mt-4 space-y-3 text-sm text-[#A8A8A8]">
+                    <li class="rounded-lg bg-[#0F1115]/70 border border-[rgba(255,255,255,0.08)] p-3">Regularly review new registrations for quality.</li>
+                    <li class="rounded-lg bg-[#0F1115]/70 border border-[rgba(255,255,255,0.08)] p-3">Keep user roles aligned with least-privilege rules.</li>
+                    <li class="rounded-lg bg-[#0F1115]/70 border border-[rgba(255,255,255,0.08)] p-3">Monitor login activity to detect unusual behavior.</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

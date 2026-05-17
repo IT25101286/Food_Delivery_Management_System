@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard | FoodDelivery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen antialiased">
+    <div class="absolute inset-0 -z-10 bg-gradient-to-br from-blue-950 via-slate-950 to-cyan-950"></div>
+
+    <header class="max-w-7xl mx-auto px-6 py-6">
+        <nav class="flex items-center justify-between rounded-2xl bg-slate-900/70 border border-blue-500/20 px-5 py-4 backdrop-blur">
+            <div class="flex items-center gap-2">
+                <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-bold">FD</span>
+                <span class="font-extrabold text-xl tracking-tight">User Dashboard</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <a th:href="@{/}" class="px-4 py-2 rounded-lg text-sm font-semibold text-blue-200 hover:bg-blue-500/20 transition">Home</a>
+                <a th:href="@{/profile}" class="px-4 py-2 rounded-lg text-sm font-semibold text-blue-200 hover:bg-blue-500/20 transition">Profile</a>
+                <form th:action="@{/logout}" method="post" class="inline">
+                    <button type="submit" class="px-4 py-2 rounded-lg text-sm font-semibold bg-blue-500 text-white hover:bg-blue-600 transition">Logout</button>
+                </form>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 pb-12">
+        <section class="rounded-3xl bg-slate-900/60 border border-blue-500/20 p-8 shadow-2xl shadow-blue-900/20">
+            <p class="inline-flex rounded-full bg-blue-500/10 border border-blue-400/40 px-3 py-1 text-xs font-semibold text-blue-200">WELCOME BACK</p>
+            <h1 class="text-3xl md:text-4xl font-black mt-4">Your Food Journey, Beautifully Organized</h1>
+            <p class="text-slate-300 mt-3 max-w-2xl">Track your latest orders, manage delivery addresses, and update your account details in one place.</p>
+        </section>
+
+        <section class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="rounded-2xl bg-slate-900/60 border border-blue-500/20 p-5">
+                <p class="text-sm text-slate-300">Orders This Month</p>
+                <p class="text-3xl font-black mt-2 text-white" th:text="${stats.ordersThisMonth}">14</p>
+                <p class="text-xs text-cyan-300 mt-2"
+                   th:text="${stats.orderDeltaFromLastMonth >= 0 ? '+' + stats.orderDeltaFromLastMonth + ' from last month' : stats.orderDeltaFromLastMonth + ' from last month'}">+3 from last month</p>
+            </div>
+            <div class="rounded-2xl bg-slate-900/60 border border-blue-500/20 p-5">
+                <p class="text-sm text-slate-300">Saved Addresses</p>
+                <p class="text-3xl font-black mt-2 text-white" th:text="${stats.savedAddresses}">4</p>
+                <p class="text-xs text-cyan-300 mt-2" th:text="${stats.savedAddressPreview}">Home, Office, Family</p>
+            </div>
+            <div class="rounded-2xl bg-slate-900/60 border border-blue-500/20 p-5">
+                <p class="text-sm text-slate-300">Delivered Orders</p>
+                <p class="text-3xl font-black mt-2 text-white" th:text="${stats.deliveredOrders}">9</p>
+                <p class="text-xs text-cyan-300 mt-2" th:text="${stats.activeOrders + ' active orders now'}">Updated this week</p>
+            </div>
+            <div class="rounded-2xl bg-slate-900/60 border border-blue-500/20 p-5">
+                <p class="text-sm text-slate-300">Loyalty Points</p>
+                <p class="text-3xl font-black mt-2 text-white" th:text="${#numbers.formatInteger(stats.loyaltyPoints, 0, 'COMMA')}">2,450</p>
+                <p class="text-xs text-cyan-300 mt-2">100 points per delivered order</p>
+            </div>
+        </section>
+
+        <section class="mt-8 grid lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 rounded-2xl bg-slate-900/60 border border-blue-500/20 p-6">
+                <h2 class="text-xl font-bold text-white">Quick Actions</h2>
+                <p class="text-sm text-slate-300 mt-1">Go to the sections you use most.</p>
+                <div class="mt-5 grid sm:grid-cols-2 gap-4">
+                    <a th:href="@{/profile}" class="rounded-xl bg-blue-500/15 border border-blue-400/30 p-4 hover:bg-blue-500/25 transition">
+                        <p class="font-semibold text-blue-200">My Profile</p>
+                        <p class="text-sm text-slate-300 mt-1">View and update your personal account details.</p>
+                    </a>
+                    <a th:href="@{/profile}" class="rounded-xl bg-cyan-500/15 border border-cyan-400/30 p-4 hover:bg-cyan-500/25 transition">
+                        <p class="font-semibold text-cyan-200">Manage Addresses</p>
+                        <p class="text-sm text-slate-300 mt-1">Add or update your delivery locations quickly.</p>
+                    </a>
+                    <div class="rounded-xl bg-slate-950/70 border border-slate-800 p-4">
+                        <p class="font-semibold text-slate-100">Recent Order</p>
+                        <p class="text-sm text-slate-300 mt-1">#FD-3208 • Delivered • 18 Mar 2026</p>
+                    </div>
+                    <div class="rounded-xl bg-slate-950/70 border border-slate-800 p-4">
+                        <p class="font-semibold text-slate-100">Recommended</p>
+                        <p class="text-sm text-slate-300 mt-1">Try the new Ocean Blue Burger Combo today.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rounded-2xl bg-slate-900/60 border border-blue-500/20 p-6">
+                <h2 class="text-xl font-bold text-white">Order Timeline</h2>
+                <ul class="mt-4 space-y-3 text-sm text-slate-300">
+                    <li class="rounded-lg bg-slate-950/70 border border-slate-800 p-3">Order Placed • 12:34 PM</li>
+                    <li class="rounded-lg bg-slate-950/70 border border-slate-800 p-3">Preparing Food • 12:42 PM</li>
+                    <li class="rounded-lg bg-slate-950/70 border border-slate-800 p-3">Out for Delivery • 12:58 PM</li>
+                    <li class="rounded-lg bg-slate-950/70 border border-slate-800 p-3">Delivered • 1:16 PM</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
