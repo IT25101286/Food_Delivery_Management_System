@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>FoodDelivery - Premium Dining at Your Doorstep</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            300: '#A8A8A8',
+                            400: '#A8A8A8',
+                            600: 'rgba(255,255,255,0.08)',
+                            800: 'rgba(255,255,255,0.05)',
+                            900: '#1A1D23',
+                            950: '#0F1115'
+                        },
+                        blue: {
+                            400: '#C9A14A',
+                            500: '#C9A14A',
+                            600: '#A9863A',
+                            950: '#0F1115'
+                        },
+                        cyan: {
+                            300: '#C9A14A',
+                            400: '#C9A14A',
+                            950: '#0F1115'
+                        },
+                        white: '#F5F5F5'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .border-blue-500\/20,
+        .border-slate-800,
+        .border-slate-600,
+        .border-b {
+            border-color: rgba(255, 255, 255, 0.08) !important;
+        }
+
+        .bg-slate-900\/60,
+        .bg-slate-900\/80 {
+            background-color: #1A1D23 !important;
+        }
+
+        .bg-slate-800 {
+            background-color: rgba(255, 255, 255, 0.05) !important;
+        }
+    </style>
+</head>
+
+<body
+    class="min-h-screen bg-gradient-to-br from-blue-950 via-slate-950 to-cyan-950 font-sans text-white overflow-x-hidden">
+    <div th:replace="~{fragments/nav :: nav}"></div>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32">
+        <!-- Hero Section -->
+        <div class="text-center md:py-24">
+            <div
+                class="inline-flex items-center justify-center px-4 py-1.5 rounded-full border border-blue-500/20 bg-slate-900/60 mb-8">
+                <span class="text-blue-400 text-sm font-medium">New: Premium Fine Dining Delivery</span>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-8">
+                Experience <span class="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">Luxury
+                    Dining</span><br />
+                <span class="text-slate-300">at Your Doorstep</span>
+            </h1>
+            <p class="max-w-2xl mx-auto text-xl text-slate-400 mb-10 leading-relaxed">
+                Curated culinary experiences from the city's finest restaurants, delivered with white-glove precision to
+                your home or office.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="/restaurants"
+                    class="w-full sm:w-auto px-8 py-4 rounded-xl text-white font-bold bg-blue-500 hover:bg-blue-600 transition shadow-lg shadow-blue-500/25">
+                    Explore Restaurants
+                </a>
+                <th:block th:if="${session.userId == null}">
+                    <a href="/register"
+                        class="w-full sm:w-auto px-8 py-4 rounded-xl text-blue-400 font-bold border border-blue-500/20 bg-slate-900/60 hover:border-blue-500/50 transition">
+                        Join Exclusive Member
+                    </a>
+                </th:block>
+            </div>
+        </div>
+
+        <!-- Feature Section -->
+        <div class="grid md:grid-cols-3 gap-8 mt-24">
+            <div
+                class="p-8 rounded-2xl bg-slate-900/60 border border-blue-500/20 hover:border-blue-500/50 transition relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition">
+                    <svg class="w-16 h-16 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
+                    </svg>
+                </div>
+                <div class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center mb-6">
+                    <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Curated Selection</h3>
+                <p class="text-slate-400 leading-relaxed">Access to an exclusive network of high-end restaurants usually
+                    requiring months of advance booking.</p>
+            </div>
+
+            <div
+                class="p-8 rounded-2xl bg-slate-900/60 border border-blue-500/20 hover:border-blue-500/50 transition relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition">
+                    <svg class="w-16 h-16 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                </div>
+                <div class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center mb-6">
+                    <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Priority Delivery</h3>
+                <p class="text-slate-400 leading-relaxed">Dedicated professional fleet ensuring your meal arrives at the
+                    perfect temperature, every time.</p>
+            </div>
+
+            <div
+                class="p-8 rounded-2xl bg-slate-900/60 border border-blue-500/20 hover:border-blue-500/50 transition relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition">
+                    <svg class="w-16 h-16 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                    </svg>
+                </div>
+                <div class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center mb-6">
+                    <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Impeccable Service</h3>
+                <p class="text-slate-400 leading-relaxed">24/7 concierge support dedicated to ensuring your complete
+                    satisfaction with every order.</p>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

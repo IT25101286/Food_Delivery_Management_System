@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Restaurant Form - Admin</title>
+<script src="https://cdn.tailwindcss.com"></script><script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        slate: {
+          300: '#A8A8A8',
+          400: '#A8A8A8',
+          600: 'rgba(255,255,255,0.08)',
+          800: 'rgba(255,255,255,0.05)',
+          900: '#1A1D23',
+          950: '#0F1115'
+        },
+        blue: {
+          400: '#C9A14A',
+          500: '#C9A14A',
+          600: '#A9863A',
+          950: '#0F1115'
+        },
+        cyan: {
+          300: '#C9A14A',
+          400: '#C9A14A',
+          950: '#0F1115'
+        },
+        white: '#F5F5F5'
+      }
+    }
+  }
+}
+</script>
+<style>
+  .border-blue-500\/20, .border-slate-800, .border-slate-600, .border-b {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+  }
+  .bg-slate-900\/60, .bg-slate-900\/80 {
+    background-color: #1A1D23 !important;
+  }
+  .bg-slate-800 {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+  }
+  select, select option {
+    background-color: #1A1D23;
+    color: #F5F5F5;
+  }
+</style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-950 via-slate-950 to-cyan-950">
+<div th:replace="~{fragments/nav :: nav}"></div>
+<div class="max-w-lg mx-auto px-4 py-10">
+  <h1 class="text-3xl font-bold text-white mb-8" th:text="${restaurant.id == null ? 'Add Restaurant' : 'Edit Restaurant'}"></h1>
+  <div class="bg-slate-900/60 border border-blue-500/20 rounded-2xl p-6">
+    <form th:action="${formAction}" method="post" class="space-y-4">
+      <div><label class="text-slate-300 text-sm block mb-1">Name</label>
+        <input type="text" name="name" th:value="${restaurant.name}" required class="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-2.5 text-white focus:border-blue-500 focus:outline-none text-sm"></div>
+      <div><label class="text-slate-300 text-sm block mb-1">Address</label>
+        <input type="text" name="address" th:value="${restaurant.address}" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-2.5 text-white focus:border-blue-500 focus:outline-none text-sm"></div>
+      <div><label class="text-slate-300 text-sm block mb-1">Phone</label>
+        <input type="text" name="phone" th:value="${restaurant.phone}" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-2.5 text-white focus:border-blue-500 focus:outline-none text-sm"></div>
+      <div><label class="text-slate-300 text-sm block mb-1">Cuisine Type</label>
+        <input type="text" name="cuisineType" th:value="${restaurant.cuisineType}" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-2.5 text-white focus:border-blue-500 focus:outline-none text-sm"></div>
+      <div class="grid grid-cols-2 gap-4">
+        <div><label class="text-slate-300 text-sm block mb-1">Opening Time</label>
+          <input type="time" name="openingTime" th:value="${restaurant.openingTime}" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-2.5 text-white focus:border-blue-500 focus:outline-none text-sm"></div>
+        <div><label class="text-slate-300 text-sm block mb-1">Closing Time</label>
+          <input type="time" name="closingTime" th:value="${restaurant.closingTime}" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-2.5 text-white focus:border-blue-500 focus:outline-none text-sm"></div>
+      </div>
+      <div><label class="text-slate-300 text-sm block mb-1">Owner Name</label>
+        <input type="text" name="ownerName" th:value="${restaurant.ownerName}" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-2.5 text-white focus:border-blue-500 focus:outline-none text-sm"></div>
+      <div><label class="text-slate-300 text-sm block mb-1">Status</label>
+        <select name="status" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-2.5 text-white focus:border-blue-500 focus:outline-none text-sm">
+          <option value="OPEN" th:selected="${restaurant.status == 'OPEN'}">OPEN</option>
+          <option value="CLOSED" th:selected="${restaurant.status == 'CLOSED'}">CLOSED</option>
+          <option value="SUSPENDED" th:selected="${restaurant.status == 'SUSPENDED'}">SUSPENDED</option>
+        </select></div>
+      <div class="flex gap-3 pt-2">
+        <button class="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-xl font-semibold transition">Save</button>
+        <a href="/admin/restaurants" class="flex-1 text-center border border-slate-600 text-slate-400 py-2.5 rounded-xl transition text-sm">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+</body></html>
