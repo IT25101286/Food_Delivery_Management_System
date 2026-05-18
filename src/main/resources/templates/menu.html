@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title th:text="${restaurant != null ? restaurant.name + ' Menu' : 'Menu'} + ' - FoodDelivery'">Menu - FoodDelivery</title>
+<script src="https://cdn.tailwindcss.com"></script><script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        slate: { 300:'#A8A8A8', 400:'#A8A8A8', 600:'rgba(255,255,255,0.08)', 800:'rgba(255,255,255,0.05)', 900:'#1A1D23', 950:'#0F1115' },
+        blue:  { 400:'#C9A14A', 500:'#C9A14A', 600:'#A9863A', 950:'#0F1115' },
+        cyan:  { 300:'#C9A14A', 400:'#C9A14A', 950:'#0F1115' },
+        white: '#F5F5F5'
+      }
+    }
+  }
+}
+</script>
+<style>
+  .border-blue-500\/20,.border-slate-800,.border-slate-600,.border-b { border-color:rgba(255,255,255,0.08)!important; }
+  .bg-slate-900\/60,.bg-slate-900\/80 { background-color:#1A1D23!important; }
+  .bg-slate-800 { background-color:rgba(255,255,255,0.05)!important; }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button { opacity:1; }
+</style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-950 via-slate-950 to-cyan-950">
+<div th:replace="~{fragments/nav :: nav}"></div>
+<div class="max-w-7xl mx-auto px-4 py-10">
+  <div class="flex items-center gap-3 mb-2">
+    <a href="/restaurants" class="text-sm transition" style="color:#A8A8A8;">← Restaurants</a>
+  </div>
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h1 class="text-3xl font-bold mb-1" style="color:#F5F5F5;"
+          th:text="${restaurant != null ? restaurant.name + ' — Menu' : 'Full Menu'}">Menu</h1>
+      <p style="color:#A8A8A8;" class="text-sm"
+         th:text="${restaurant != null ? restaurant.cuisineType + ' • ' + restaurant.address : 'Available items'}"></p>
+    </div>
+    <a th:if="${session.userRole == 'USER'}" href="/cart"
+       class="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition"
+       style="background-color:rgba(201,161,74,0.15);color:#C9A14A;border:1px solid rgba(201,161,74,0.3);">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+      </svg>
+      View Cart
+      <th:block th:if="${session.cartCount != null and session.cartCount > 0}">
+        <span class="font-bold rounded-full px-1.5 text-xs" style="background-color:#C9A14A;color:#0F1115;"
+              th:text="${session.cartCount}"></span>
+      </th:block>
+    </a>
+  </div>
+
+  <!-- Toast message for cart action (shown via query param) -->
+  <div th:if="${param.added}" class="mb-6 px-4 py-3 rounded-xl text-sm font-medium"
+       style="background-color:rgba(201,161,74,0.15);color:#C9A14A;border:1px solid rgba(201,161,74,0.3);">
+    Item added to cart!
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div th:each="item : ${items}" class="rounded-2xl p-5 flex flex-col"
+         style="background-color:#1A1D23;border:1px solid rgba(255,255,255,0.08);">
+      <div class="flex justify-between items-start mb-1">
+        <h3 class="font-semibold" style="color:#F5F5F5;" th:text="${item.name}"></h3>
+        <span class="font-bold" style="color:#C9A14A;" th:text="'Rs. ' + ${item.price}"></span>
+      </div>
+      <p class="text-xs mb-3" style="color:#A8A8A8;" th:text="${item.category}"></p>
+      <div class="mb-4">
+        <span th:if="${item.available}"
+              class="text-xs px-2 py-0.5 rounded-full"
+              style="background-color:rgba(34,197,94,0.15);color:#4ade80;">Available</span>
+        <span th:unless="${item.available}"
+              class="text-xs px-2 py-0.5 rounded-full"
+              style="background-color:rgba(239,68,68,0.15);color:#f87171;">Unavailable</span>
+      </div>
+
+      <!-- Add to Cart (logged-in USER + item available) -->
+      <th:block th:if="${session.userRole == 'USER' and item.available}">
+        <form action="/cart/add" method="post" class="flex items-center gap-2 mt-auto">
+          <input type="hidden" name="itemId" th:value="${item.id}">
+          <input type="hidden" name="restaurantId" th:value="${restaurant != null ? restaurant.id : 0}">
+          <input type="number" name="quantity" value="1" min="1" max="20"
+                 class="text-center rounded-lg text-sm"
+                 style="width:56px;padding:6px 4px;background-color:rgba(255,255,255,0.06);color:#F5F5F5;border:1px solid rgba(255,255,255,0.15);">
+          <button type="submit" class="flex-1 py-2 rounded-xl text-sm font-semibold transition"
+                  style="background-color:#C9A14A;color:#0F1115;">Add to Cart</button>
+        </form>
+      </th:block>
+
+      <!-- Login prompt for guests -->
+      <th:block th:if="${session.userId == null and item.available}">
+        <a href="/login" class="block text-center mt-auto py-2 rounded-xl text-sm transition"
+           style="background-color:rgba(201,161,74,0.1);color:#C9A14A;border:1px solid rgba(201,161,74,0.2);">
+          Login to Order
+        </a>
+      </th:block>
+    </div>
+  </div>
+  <div th:if="${#lists.isEmpty(items)}" class="text-center mt-16" style="color:#A8A8A8;">No items available for this restaurant.</div>
+</div>
+</body></html>

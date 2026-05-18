@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Pay - FoodDelivery</title>
+<script src="https://cdn.tailwindcss.com"></script><script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        slate: {
+          300: '#A8A8A8',
+          400: '#A8A8A8',
+          600: 'rgba(255,255,255,0.08)',
+          800: 'rgba(255,255,255,0.05)',
+          900: '#1A1D23',
+          950: '#0F1115'
+        },
+        blue: {
+          400: '#C9A14A',
+          500: '#C9A14A',
+          600: '#A9863A',
+          950: '#0F1115'
+        },
+        cyan: {
+          300: '#C9A14A',
+          400: '#C9A14A',
+          950: '#0F1115'
+        },
+        white: '#F5F5F5'
+      }
+    }
+  }
+}
+</script>
+<style>
+  .border-blue-500\/20, .border-slate-800, .border-slate-600, .border-b {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+  }
+  .bg-slate-900\/60, .bg-slate-900\/80 {
+    background-color: #1A1D23 !important;
+  }
+  .bg-slate-800 {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+  }
+</style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-950 via-slate-950 to-cyan-950">
+<div th:replace="~{fragments/nav :: nav}"></div>
+<div class="max-w-lg mx-auto px-4 py-10">
+  <h1 class="text-3xl font-bold text-white mb-8">Make Payment</h1>
+  <div th:if="${order != null}" class="bg-slate-900/60 border border-blue-500/20 rounded-2xl p-6 mb-6">
+    <div class="flex justify-between mb-2"><span class="text-slate-400 text-sm">Order</span><span class="text-cyan-300 font-mono" th:text="${order.orderRef}"></span></div>
+    <div class="flex justify-between mb-2"><span class="text-slate-400 text-sm">Items</span><span class="text-white text-sm" th:text="${order.itemsSummary}"></span></div>
+    <div class="flex justify-between"><span class="text-slate-400 text-sm">Amount</span><span class="text-white font-bold" th:text="'Rs. ' + ${order.totalAmount}"></span></div>
+  </div>
+  <div th:if="${orders != null}" class="bg-slate-900/60 border border-blue-500/20 rounded-2xl p-6 mb-6">
+    <p class="text-slate-400 text-sm mb-3">Select an order to pay:</p>
+    <div class="space-y-2">
+      <a th:each="o : ${orders}" th:if="${o.status == 'PENDING'}"
+         th:href="@{/payment/pay(orderId=${o.id})}"
+         class="flex justify-between items-center bg-slate-800/50 rounded-xl px-4 py-3 hover:bg-slate-700/50 transition">
+        <span class="text-cyan-300 font-mono text-sm" th:text="${o.orderRef}"></span>
+        <span class="text-white font-semibold text-sm" th:text="'Rs. ' + ${o.totalAmount}"></span>
+      </a>
+    </div>
+  </div>
+  <form th:if="${order != null}" action="/payment/pay" method="post" class="space-y-4">
+    <input type="hidden" name="orderId" th:value="${order.id}">
+    <div>
+      <label class="text-slate-300 text-sm block mb-2">Payment Method</label>
+      <div class="grid grid-cols-3 gap-3">
+        <label class="flex flex-col items-center gap-2 bg-slate-800/50 rounded-xl p-4 cursor-pointer hover:bg-slate-700/50 transition">
+          <input type="radio" name="paymentMethod" value="CASH" class="accent-blue-500"> <span class="text-white text-sm">Cash</span>
+        </label>
+        <label class="flex flex-col items-center gap-2 bg-slate-800/50 rounded-xl p-4 cursor-pointer hover:bg-slate-700/50 transition">
+          <input type="radio" name="paymentMethod" value="CARD" class="accent-blue-500"> <span class="text-white text-sm">Card</span>
+        </label>
+        <label class="flex flex-col items-center gap-2 bg-slate-800/50 rounded-xl p-4 cursor-pointer hover:bg-slate-700/50 transition">
+          <input type="radio" name="paymentMethod" value="MOBILE" class="accent-blue-500"> <span class="text-white text-sm">Mobile</span>
+        </label>
+      </div>
+    </div>
+    <button class="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl font-semibold transition">Confirm Payment</button>
+  </form>
+</div>
+</body></html>
