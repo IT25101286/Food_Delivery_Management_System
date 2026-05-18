@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Payments - Admin</title>
+<script src="https://cdn.tailwindcss.com"></script><script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        slate: {
+          300: '#A8A8A8',
+          400: '#A8A8A8',
+          600: 'rgba(255,255,255,0.08)',
+          800: 'rgba(255,255,255,0.05)',
+          900: '#1A1D23',
+          950: '#0F1115'
+        },
+        blue: {
+          400: '#C9A14A',
+          500: '#C9A14A',
+          600: '#A9863A',
+          950: '#0F1115'
+        },
+        cyan: {
+          300: '#C9A14A',
+          400: '#C9A14A',
+          950: '#0F1115'
+        },
+        white: '#F5F5F5'
+      }
+    }
+  }
+}
+</script>
+<style>
+  .border-blue-500\/20, .border-slate-800, .border-slate-600, .border-b {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+  }
+  .bg-slate-900\/60, .bg-slate-900\/80 {
+    background-color: #1A1D23 !important;
+  }
+  .bg-slate-800 {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+  }
+</style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-950 via-slate-950 to-cyan-950">
+<div th:replace="~{fragments/nav :: nav}"></div>
+<div class="max-w-7xl mx-auto px-4 py-10">
+  <h1 class="text-3xl font-bold text-white mb-8">All Payments</h1>
+  <div class="bg-slate-900/60 border border-blue-500/20 rounded-2xl overflow-hidden">
+    <table class="w-full text-sm">
+      <thead><tr class="border-b border-blue-500/20">
+        <th class="text-left text-slate-400 px-4 py-3">Payment Ref</th>
+        <th class="text-left text-slate-400 px-4 py-3">Order Ref</th>
+        <th class="text-left text-slate-400 px-4 py-3">Customer</th>
+        <th class="text-left text-slate-400 px-4 py-3">Amount</th>
+        <th class="text-left text-slate-400 px-4 py-3">Method</th>
+        <th class="text-left text-slate-400 px-4 py-3">Status</th>
+        <th class="text-left text-slate-400 px-4 py-3">Action</th>
+      </tr></thead>
+      <tbody>
+        <tr th:each="p : ${payments}" class="border-b border-slate-800 hover:bg-slate-800/30">
+          <td class="px-4 py-3 text-cyan-300 font-mono text-xs" th:text="${p.paymentRef}"></td>
+          <td class="px-4 py-3 text-slate-300 font-mono text-xs" th:text="${p.orderRef}"></td>
+          <td class="px-4 py-3 text-slate-300" th:text="${p.customerName}"></td>
+          <td class="px-4 py-3 text-white font-semibold" th:text="'Rs. ' + ${p.amount}"></td>
+          <td class="px-4 py-3 text-slate-400" th:text="${p.paymentMethod}"></td>
+          <td class="px-4 py-3">
+            <span class="px-2 py-1 rounded-full text-xs font-semibold"
+              th:style="${p.status == 'COMPLETED'} ? 'background-color:rgba(34,197,94,0.15);color:#4ade80;'
+                       : (${p.status == 'PENDING'}  ? 'background-color:rgba(239,68,68,0.15);color:#f87171;'
+                       : 'background-color:rgba(239,68,68,0.15);color:#f87171;')"
+              th:text="${p.status == 'PENDING'} ? 'Not Approved' : ${p.status}"></span>
+          </td>
+          <td class="px-4 py-3">
+            <!-- Approve button — only shown for PENDING payments -->
+            <form th:if="${p.status == 'PENDING'}"
+                  th:action="@{/admin/payments/{id}/approve(id=${p.id})}" method="post">
+              <button class="px-3 py-1 rounded-lg text-xs font-semibold transition"
+                      style="background-color:rgba(34,197,94,0.2);color:#4ade80;border:1px solid rgba(34,197,94,0.3);"
+                      onmouseover="this.style.backgroundColor='rgba(34,197,94,0.35)'"
+                      onmouseout="this.style.backgroundColor='rgba(34,197,94,0.2)'">Approve</button>
+            </form>
+            <span th:if="${p.status == 'COMPLETED'}" class="text-xs" style="color:#4ade80;">&#10003; Approved</span>
+            <span th:if="${p.status == 'FAILED'}" class="text-xs" style="color:#f87171;">Failed</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body></html>

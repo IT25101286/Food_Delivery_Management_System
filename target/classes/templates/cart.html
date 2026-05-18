@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Cart - FoodDelivery</title>
+<script src="https://cdn.tailwindcss.com"></script><script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        slate: { 300:'#A8A8A8', 400:'#A8A8A8', 600:'rgba(255,255,255,0.08)', 800:'rgba(255,255,255,0.05)', 900:'#1A1D23', 950:'#0F1115' },
+        blue:  { 400:'#C9A14A', 500:'#C9A14A', 600:'#A9863A', 950:'#0F1115' },
+        cyan:  { 300:'#C9A14A', 400:'#C9A14A', 950:'#0F1115' },
+        white: '#F5F5F5'
+      }
+    }
+  }
+}
+</script>
+<style>
+  .border-blue-500\/20,.border-slate-800,.border-slate-600,.border-b { border-color:rgba(255,255,255,0.08)!important; }
+  .bg-slate-900\/60,.bg-slate-900\/80 { background-color:#1A1D23!important; }
+  .bg-slate-800 { background-color:rgba(255,255,255,0.05)!important; }
+  input[type="text"]:focus { border-color:#C9A14A!important; outline:none; }
+</style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-950 via-slate-950 to-cyan-950">
+<div th:replace="~{fragments/nav :: nav}"></div>
+<div class="max-w-2xl mx-auto px-4 py-10">
+  <div class="flex items-center gap-4 mb-8">
+    <a href="/restaurants" style="color:#A8A8A8;" class="text-sm hover:text-white transition">← Continue Shopping</a>
+    <h1 class="text-3xl font-bold" style="color:#F5F5F5;">Your Cart</h1>
+  </div>
+
+  <!-- Empty cart -->
+  <div th:if="${#lists.isEmpty(cart)}" class="text-center py-20">
+    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="#A8A8A8" class="mx-auto mb-4" viewBox="0 0 16 16">
+      <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+    </svg>
+    <p style="color:#A8A8A8;" class="text-lg mb-6">Your cart is empty</p>
+    <a href="/restaurants" class="inline-block px-6 py-3 rounded-xl font-semibold transition"
+       style="background-color:#C9A14A;color:#0F1115;">Browse Restaurants</a>
+  </div>
+
+  <!-- Cart with items -->
+  <div th:if="${!#lists.isEmpty(cart)}">
+
+    <!-- Items grouped by restaurant -->
+    <div class="space-y-6 mb-6" th:each="entry : ${groupedCart.entrySet()}">
+      <!-- Restaurant header -->
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-sm font-semibold px-3 py-1 rounded-full"
+                style="background-color:rgba(201,161,74,0.12);color:#C9A14A;border:1px solid rgba(201,161,74,0.25);"
+                th:text="${entry.key}"></span>
+        </div>
+
+        <!-- Items for this restaurant -->
+        <div class="space-y-2">
+          <div th:each="item : ${entry.value}" class="rounded-xl p-4 flex items-center gap-4"
+               style="background-color:#1A1D23;border:1px solid rgba(255,255,255,0.08);">
+            <div class="flex-1 min-w-0">
+              <p class="font-medium truncate" style="color:#F5F5F5;" th:text="${item.itemName}"></p>
+              <p class="text-xs mt-0.5" style="color:#A8A8A8;" th:text="'Rs. ' + ${item.price} + ' each'"></p>
+            </div>
+            <!-- Quantity controls -->
+            <div class="flex items-center gap-1">
+              <form action="/cart/update" method="post" class="inline">
+                <input type="hidden" name="itemId" th:value="${item.itemId}">
+                <input type="hidden" name="quantity" th:value="${item.quantity - 1}">
+                <button type="submit"
+                        class="w-8 h-8 rounded-lg font-bold text-base flex items-center justify-center transition"
+                        style="background-color:rgba(255,255,255,0.08);color:#F5F5F5;">−</button>
+              </form>
+              <span class="w-7 text-center font-bold" style="color:#F5F5F5;" th:text="${item.quantity}"></span>
+              <form action="/cart/update" method="post" class="inline">
+                <input type="hidden" name="itemId" th:value="${item.itemId}">
+                <input type="hidden" name="quantity" th:value="${item.quantity < 20 ? item.quantity + 1 : 20}">
+                <button type="submit"
+                        class="w-8 h-8 rounded-lg font-bold text-base flex items-center justify-center transition"
+                        style="background-color:#C9A14A;color:#0F1115;"
+                        th:attr="disabled=${item.quantity >= 20} ? 'disabled' : null">+</button>
+              </form>
+            </div>
+            <!-- Subtotal -->
+            <p class="font-bold text-sm" style="color:#C9A14A;min-width:72px;text-align:right;"
+               th:text="'Rs. ' + ${item.subtotal}"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Multi-restaurant note -->
+    <div th:if="${groupedCart.size() > 1}"
+         class="mb-4 px-4 py-2.5 rounded-xl text-xs"
+         style="background-color:rgba(234,179,8,0.08);color:#fbbf24;border:1px solid rgba(234,179,8,0.2);">
+      Items from <span th:text="${groupedCart.size()}"></span> restaurants — placing order will create one order per restaurant.
+    </div>
+
+    <!-- Cart total -->
+    <div class="flex justify-between items-center px-4 py-3 rounded-xl mb-6"
+         style="background-color:#1A1D23;border:1px solid rgba(255,255,255,0.08);">
+      <span class="font-semibold" style="color:#A8A8A8;">Total</span>
+      <span class="text-xl font-bold" style="color:#F5F5F5;" th:text="'Rs. ' + ${cartTotal}"></span>
+    </div>
+
+    <!-- Place order form -->
+    <form action="/cart/place" method="post" class="rounded-2xl p-6 space-y-4"
+          style="background-color:#1A1D23;border:1px solid rgba(255,255,255,0.08);">
+      <h2 class="font-semibold text-lg" style="color:#F5F5F5;">Delivery Details</h2>
+      <div>
+        <label class="text-sm block mb-2" style="color:#A8A8A8;">Delivery Address</label>
+        <input type="text" name="deliveryAddress" required placeholder="Enter your delivery address"
+               class="w-full rounded-xl px-4 py-2.5 text-sm"
+               style="background-color:rgba(255,255,255,0.06);color:#F5F5F5;border:1px solid rgba(255,255,255,0.15);">
+      </div>
+      <button type="submit" class="w-full py-3 rounded-xl font-semibold text-base transition"
+              style="background-color:#C9A14A;color:#0F1115;">Place Order</button>
+    </form>
+  </div>
+</div>
+</body></html>

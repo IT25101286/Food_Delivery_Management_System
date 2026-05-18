@@ -1,180 +1,85 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restaurant Form | Food Delivery Admin</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        select {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23A8A8A8' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            padding-right: 36px;
-        }
-        
-        select option {
-            background-color: #1A1D23;
-            color: #F5F5F5;
-        }
-        
-        select option:hover {
-            background-color: #C9A14A;
-            color: #0F1115;
-        }
-    </style>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Restaurant Form - Admin</title>
+<script src="https://cdn.tailwindcss.com"></script><script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        slate: {
+          300: '#A8A8A8',
+          400: '#A8A8A8',
+          600: 'rgba(255,255,255,0.08)',
+          800: 'rgba(255,255,255,0.05)',
+          900: '#1A1D23',
+          950: '#0F1115'
+        },
+        blue: {
+          400: '#C9A14A',
+          500: '#C9A14A',
+          600: '#A9863A',
+          950: '#0F1115'
+        },
+        cyan: {
+          300: '#C9A14A',
+          400: '#C9A14A',
+          950: '#0F1115'
+        },
+        white: '#F5F5F5'
+      }
+    }
+  }
+}
+</script>
+<style>
+  .border-blue-500\/20, .border-slate-800, .border-slate-600, .border-b {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+  }
+  .bg-slate-900\/60, .bg-slate-900\/80 {
+    background-color: #1A1D23 !important;
+  }
+  .bg-slate-800 {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+  }
+  select, select option {
+    background-color: #1A1D23;
+    color: #F5F5F5;
+  }
+</style>
 </head>
-<body class="bg-[#0F1115] text-[#F5F5F5]">
-
-<!-- Navigation -->
-<nav class="bg-[#1A1D23] border-b border-[rgba(255,255,255,0.08)]">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div class="flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <div class="flex items-center gap-2">
-                    <div class="w-10 h-10 bg-gradient-to-r from-[#C9A14A] to-[#C9A14A] rounded-lg flex items-center justify-center">
-                        <span class="text-lg font-bold">🍽️</span>
-                    </div>
-                    <h1 class="text-2xl font-bold bg-gradient-to-r from-[#C9A14A] to-[#C9A14A] bg-clip-text text-transparent">FoodHub</h1>
-                </div>
-                <span class="text-[#A8A8A8]">|</span>
-                <span class="text-[#C9A14A] font-semibold">Admin</span>
-            </div>
-            <div class="flex gap-4">
-                <a href="/logout" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-semibold transition">Logout</a>
-            </div>
-        </div>
-    </div>
-</nav>
-
-<!-- Sidebar -->
-<div class="flex min-h-screen">
-    <aside class="w-64 bg-[#1A1D23] border-r border-[rgba(255,255,255,0.08)] p-6">
-        <nav class="space-y-2">
-            <a href="/admin/dashboard" class="block px-4 py-3 rounded-lg text-[#A8A8A8] hover:text-[#C9A14A] hover:bg-white/5 transition">
-                📊 Dashboard
-            </a>
-            <a href="/admin/restaurants" class="block px-4 py-3 rounded-lg text-[#A8A8A8] hover:text-[#C9A14A] hover:bg-white/5 transition">
-                🏪 Manage Restaurants
-            </a>
-            <a href="/restaurants" class="block px-4 py-3 rounded-lg text-[#A8A8A8] hover:text-[#C9A14A] hover:bg-white/5 transition">
-                👀 View Public Listing
-            </a>
-        </nav>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="flex-1">
-        <div class="max-w-4xl mx-auto px-6 py-12">
-            <!-- Header -->
-            <div class="mb-8">
-                <h2 class="text-4xl font-bold mb-2">
-                    <span th:if="${restaurant.id == null}">Add New Restaurant</span>
-                    <span th:if="${restaurant.id != null}" th:text="'Edit ' + ${restaurant.name}"></span>
-                </h2>
-                <p class="text-[#A8A8A8]">Fill in the details below to manage restaurant information</p>
-            </div>
-
-            <!-- Form -->
-            <form th:action="${restaurant.id == null} ? @{/admin/restaurants} : @{/admin/restaurants/{id}(id=${restaurant.id})}" 
-                  th:method="'post'"
-                  th:object="${restaurant}"
-                  class="bg-[#1A1D23] border border-[rgba(255,255,255,0.08)] rounded-xl p-8 space-y-6">
-
-                <!-- Restaurant Name -->
-                <div>
-                    <label for="name" class="block text-sm font-semibold text-[#A8A8A8] mb-3">Restaurant Name *</label>
-                    <input type="text" id="name" th:field="*{name}" required
-                           class="w-full px-4 py-3 bg-white/5 border border-[rgba(255,255,255,0.08)] rounded-lg text-[#F5F5F5] placeholder-gray-500 focus:outline-none focus:border-[rgba(255,255,255,0.08)] focus:ring-1 focus:ring-cyan-500/50 transition"
-                           placeholder="e.g., Spice Palace">
-                </div>
-
-                <!-- Owner Name -->
-                <div>
-                    <label for="ownerName" class="block text-sm font-semibold text-[#A8A8A8] mb-3">Owner Name *</label>
-                    <input type="text" id="ownerName" th:field="*{ownerName}" required
-                           class="w-full px-4 py-3 bg-white/5 border border-[rgba(255,255,255,0.08)] rounded-lg text-[#F5F5F5] placeholder-gray-500 focus:outline-none focus:border-[rgba(255,255,255,0.08)] focus:ring-1 focus:ring-cyan-500/50 transition"
-                           placeholder="e.g., John Smith">
-                </div>
-
-                <!-- Address -->
-                <div>
-                    <label for="address" class="block text-sm font-semibold text-[#A8A8A8] mb-3">Address *</label>
-                    <input type="text" id="address" th:field="*{address}" required
-                           class="w-full px-4 py-3 bg-white/5 border border-[rgba(255,255,255,0.08)] rounded-lg text-[#F5F5F5] placeholder-gray-500 focus:outline-none focus:border-[rgba(255,255,255,0.08)] focus:ring-1 focus:ring-cyan-500/50 transition"
-                           placeholder="e.g., 123 Main Street, City">
-                </div>
-
-                <!-- Phone -->
-                <div>
-                    <label for="phone" class="block text-sm font-semibold text-[#A8A8A8] mb-3">Phone Number *</label>
-                    <input type="tel" id="phone" th:field="*{phone}" required
-                           class="w-full px-4 py-3 bg-white/5 border border-[rgba(255,255,255,0.08)] rounded-lg text-[#F5F5F5] placeholder-gray-500 focus:outline-none focus:border-[rgba(255,255,255,0.08)] focus:ring-1 focus:ring-cyan-500/50 transition"
-                           placeholder="e.g., 555-1234">
-                </div>
-
-                <!-- Cuisine Type -->
-                <div>
-                    <label for="cuisineType" class="block text-sm font-semibold text-[#A8A8A8] mb-3">Cuisine Type *</label>
-                    <select id="cuisineType" th:field="*{cuisineType}" required
-                            class="w-full px-4 py-3 bg-[#262A31] border border-[rgba(255,255,255,0.08)] rounded-lg text-[#F5F5F5] focus:outline-none focus:border-[rgba(255,255,255,0.12)] focus:ring-1 focus:ring-cyan-500/50 transition cursor-pointer">
-                        <option value="">Select a cuisine...</option>
-                        <option value="Indian">Indian</option>
-                        <option value="Italian">Italian</option>
-                        <option value="Chinese">Chinese</option>
-                        <option value="Mexican">Mexican</option>
-                        <option value="American">American</option>
-                        <option value="Thai">Thai</option>
-                        <option value="Japanese">Japanese</option>
-                        <option value="Mediterranean">Mediterranean</option>
-                        <option value="French">French</option>
-                        <option value="Vietnamese">Vietnamese</option>
-                    </select>
-                </div>
-
-                <!-- Status -->
-                <div>
-                    <label for="status" class="block text-sm font-semibold text-[#A8A8A8] mb-3">Status *</label>
-                    <select id="status" th:field="*{status}" required
-                            class="w-full px-4 py-3 bg-[#262A31] border border-[rgba(255,255,255,0.08)] rounded-lg text-[#F5F5F5] focus:outline-none focus:border-[rgba(255,255,255,0.12)] focus:ring-1 focus:ring-cyan-500/50 transition cursor-pointer">
-                        <option value="">Select status...</option>
-                        <option value="OPEN">Open</option>
-                        <option value="CLOSED">Closed</option>
-                        <option value="SUSPENDED">Suspended</option>
-                    </select>
-                </div>
-
-                <!-- Opening Time -->
-                <div>
-                    <label for="openingTime" class="block text-sm font-semibold text-[#A8A8A8] mb-3">Opening Time *</label>
-                    <input type="text" id="openingTime" th:field="*{openingTime}" required
-                           class="w-full px-4 py-3 bg-white/5 border border-[rgba(255,255,255,0.08)] rounded-lg text-[#F5F5F5] placeholder-gray-500 focus:outline-none focus:border-[rgba(255,255,255,0.08)] focus:ring-1 focus:ring-cyan-500/50 transition"
-                           placeholder="e.g., 09:00 AM">
-                </div>
-
-                <!-- Closing Time -->
-                <div>
-                    <label for="closingTime" class="block text-sm font-semibold text-[#A8A8A8] mb-3">Closing Time *</label>
-                    <input type="text" id="closingTime" th:field="*{closingTime}" required
-                           class="w-full px-4 py-3 bg-white/5 border border-[rgba(255,255,255,0.08)] rounded-lg text-[#F5F5F5] placeholder-gray-500 focus:outline-none focus:border-[rgba(255,255,255,0.08)] focus:ring-1 focus:ring-cyan-500/50 transition"
-                           placeholder="e.g., 11:00 PM">
-                </div>
-
-                <!-- Form Actions -->
-                <div class="flex gap-4 pt-6 border-t border-[rgba(255,255,255,0.08)]">
-                    <button type="submit" class="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-[#F5F5F5] font-bold py-3 rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95">
-                        <span th:if="${restaurant.id == null}">Create Restaurant</span>
-                        <span th:if="${restaurant.id != null}">Update Restaurant</span>
-                    </button>
-                    <a href="/admin/restaurants" class="flex-1 bg-white/5 hover:bg-white/10 text-[#A8A8A8] font-bold py-3 rounded-lg transition text-center">
-                        Cancel
-                    </a>
-                </div>
-            </form>
-        </div>
-    </main>
+<body class="min-h-screen bg-gradient-to-br from-blue-950 via-slate-950 to-cyan-950">
+<div th:replace="~{fragments/nav :: nav}"></div>
+<div class="max-w-lg mx-auto px-4 py-10">
+  <h1 class="text-3xl font-bold text-white mb-8" th:text="${restaurant.id == null ? 'Add Restaurant' : 'Edit Restaurant'}"></h1>
+  <div class="bg-slate-900/60 border border-blue-500/20 rounded-2xl p-6">
+    <form th:action="${formAction}" method="post" class="space-y-4">
+      <div><label class="text-slate-300 text-sm block mb-1">Name</label>
+        <input type="text" name="name" th:value="${restaurant.name}" required class="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-2.5 text-white focus:border-blue-500 focus:outline-none text-sm"></div>
+      <div><label class="text-slate-300 text-sm block mb-1">Address</label>
+        <input type="text" name="address" th:value="${restaurant.address}" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-2.5 text-white focus:border-blue-500 focus:outline-none text-sm"></div>
+      <div><label class="text-slate-300 text-sm block mb-1">Phone</label>
+        <input type="text" name="phone" th:value="${restaurant.phone}" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-2.5 text-white focus:border-blue-500 focus:outline-none text-sm"></div>
+      <div><label class="text-slate-300 text-sm block mb-1">Cuisine Type</label>
+        <input type="text" name="cuisineType" th:value="${restaurant.cuisineType}" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-2.5 text-white focus:border-blue-500 focus:outline-none text-sm"></div>
+      <div class="grid grid-cols-2 gap-4">
+        <div><label class="text-slate-300 text-sm block mb-1">Opening Time</label>
+          <input type="time" name="openingTime" th:value="${restaurant.openingTime}" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-2.5 text-white focus:border-blue-500 focus:outline-none text-sm"></div>
+        <div><label class="text-slate-300 text-sm block mb-1">Closing Time</label>
+          <input type="time" name="closingTime" th:value="${restaurant.closingTime}" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-2.5 text-white focus:border-blue-500 focus:outline-none text-sm"></div>
+      </div>
+      <div><label class="text-slate-300 text-sm block mb-1">Owner Name</label>
+        <input type="text" name="ownerName" th:value="${restaurant.ownerName}" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-2.5 text-white focus:border-blue-500 focus:outline-none text-sm"></div>
+      <div><label class="text-slate-300 text-sm block mb-1">Status</label>
+        <select name="status" class="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-2.5 text-white focus:border-blue-500 focus:outline-none text-sm">
+          <option value="OPEN" th:selected="${restaurant.status == 'OPEN'}">OPEN</option>
+          <option value="CLOSED" th:selected="${restaurant.status == 'CLOSED'}">CLOSED</option>
+          <option value="SUSPENDED" th:selected="${restaurant.status == 'SUSPENDED'}">SUSPENDED</option>
+        </select></div>
+      <div class="flex gap-3 pt-2">
+        <button class="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-xl font-semibold transition">Save</button>
+        <a href="/admin/restaurants" class="flex-1 text-center border border-slate-600 text-slate-400 py-2.5 rounded-xl transition text-sm">Cancel</a>
+      </div>
+    </form>
+  </div>
 </div>
-
-</body>
-</html>
+</body></html>

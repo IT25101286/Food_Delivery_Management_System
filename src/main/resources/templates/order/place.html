@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Place Order - FoodDelivery</title>
+<script src="https://cdn.tailwindcss.com"></script><script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        slate: {
+          300: '#A8A8A8',
+          400: '#A8A8A8',
+          600: 'rgba(255,255,255,0.08)',
+          800: 'rgba(255,255,255,0.05)',
+          900: '#1A1D23',
+          950: '#0F1115'
+        },
+        blue: {
+          400: '#C9A14A',
+          500: '#C9A14A',
+          600: '#A9863A',
+          950: '#0F1115'
+        },
+        cyan: {
+          300: '#C9A14A',
+          400: '#C9A14A',
+          950: '#0F1115'
+        },
+        white: '#F5F5F5'
+      }
+    }
+  }
+}
+</script>
+<style>
+  .border-blue-500\/20, .border-slate-800, .border-slate-600, .border-b {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+  }
+  .bg-slate-900\/60, .bg-slate-900\/80 {
+    background-color: #1A1D23 !important;
+  }
+  .bg-slate-800 {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+  }
+  select, select option {
+    background-color: #1A1D23;
+    color: #F5F5F5;
+  }
+  select option:hover, select option:focus, select option:checked {
+    background-color: #2a2d35;
+    color: #F5F5F5;
+  }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    opacity: 1;
+  }
+</style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-950 via-slate-950 to-cyan-950">
+<div th:replace="~{fragments/nav :: nav}"></div>
+<div class="max-w-3xl mx-auto px-4 py-10">
+  <h1 class="text-3xl font-bold text-white mb-8">Place Order</h1>
+  <form action="/order/place" method="post" class="space-y-6" id="orderForm">
+    <!-- Restaurant Selection -->
+    <div class="bg-slate-900/60 border border-blue-500/20 rounded-2xl p-6">
+      <h2 class="text-white font-semibold mb-4">Select Restaurant</h2>
+      <select id="restaurantSelect" name="restaurantId" required
+        style="background-color:#1A1D23;color:#F5F5F5;"
+        class="w-full border border-slate-600 rounded-xl px-4 py-2.5 focus:border-blue-500 focus:outline-none text-sm">
+        <option value="">-- Choose a restaurant --</option>
+        <option th:each="r : ${restaurants}" th:value="${r.id}" th:text="${r.name}"></option>
+      </select>
+    </div>
+
+    <!-- Items Section (hidden until restaurant selected) -->
+    <div id="itemsSection" class="bg-slate-900/60 border border-blue-500/20 rounded-2xl p-6" style="display:none;">
+      <h2 class="text-white font-semibold mb-4">Select Items &amp; Quantities</h2>
+      <p id="noItemsMsg" class="text-slate-400 text-sm" style="display:none;">No available items for this restaurant.</p>
+      <div id="itemsList" class="space-y-3">
+        <div th:each="item : ${items}"
+             class="item-row flex items-center gap-3 bg-slate-800/50 rounded-xl p-3"
+             th:attr="data-restaurant-id=${item.restaurantId}"
+             style="display:none;">
+          <span class="text-white text-sm flex-1" th:text="${item.name}"></span>
+          <span class="text-cyan-300 text-sm font-semibold" th:text="'Rs. ' + ${item.price}"></span>
+          <input type="number"
+                 th:name="'qty_' + ${item.id}"
+                 min="0" value="0"
+                 style="background-color:#1A1D23;color:#F5F5F5;border:1px solid rgba(255,255,255,0.15);border-radius:8px;width:64px;padding:4px 8px;text-align:center;">
+        </div>
+      </div>
+    </div>
+
+    <!-- Delivery Address -->
+    <div class="bg-slate-900/60 border border-blue-500/20 rounded-2xl p-6">
+      <h2 class="text-white font-semibold mb-4">Delivery Address</h2>
+      <input type="text" name="deliveryAddress" required placeholder="Enter your delivery address"
+        style="background-color:#1A1D23;color:#F5F5F5;border:1px solid rgba(255,255,255,0.15);"
+        class="w-full rounded-xl px-4 py-2.5 focus:outline-none text-sm placeholder-slate-400">
+    </div>
+
+    <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl font-semibold transition"
+            style="background-color:#C9A14A;">Confirm Order</button>
+  </form>
+</div>
+
+<script>
+  const restaurantSelect = document.getElementById('restaurantSelect');
+  const itemsSection = document.getElementById('itemsSection');
+  const noItemsMsg = document.getElementById('noItemsMsg');
+  const itemRows = document.querySelectorAll('.item-row');
+
+  restaurantSelect.addEventListener('change', function () {
+    const rid = this.value;
+
+    if (!rid) {
+      itemsSection.style.display = 'none';
+      itemRows.forEach(row => {
+        row.style.display = 'none';
+        row.querySelector('input[type="number"]').value = '0';
+      });
+      return;
+    }
+
+    itemsSection.style.display = 'block';
+    let hasVisible = false;
+
+    itemRows.forEach(row => {
+      if (row.dataset.restaurantId === rid) {
+        row.style.display = 'flex';
+        hasVisible = true;
+      } else {
+        row.style.display = 'none';
+        row.querySelector('input[type="number"]').value = '0';
+      }
+    });
+
+    noItemsMsg.style.display = hasVisible ? 'none' : 'block';
+  });
+</script>
+</body></html>
