@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Admin Form - FoodDelivery</title>
+<script src="https://cdn.tailwindcss.com"></script><script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        slate: { 300: '#A8A8A8', 400: '#A8A8A8', 600: 'rgba(255,255,255,0.08)', 800: 'rgba(255,255,255,0.05)', 900: '#1A1D23', 950: '#0F1115' },
+        blue: { 400: '#C9A14A', 500: '#C9A14A', 600: '#A9863A', 950: '#0F1115' },
+        cyan: { 300: '#C9A14A', 400: '#C9A14A', 950: '#0F1115' },
+        white: '#F5F5F5'
+      }
+    }
+  }
+}
+</script>
+<style>
+  .border-blue-500\/20, .border-slate-800, .border-slate-600, .border-b { border-color: rgba(255,255,255,0.08) !important; }
+  .bg-slate-900\/60, .bg-slate-900\/80 { background-color: #1A1D23 !important; }
+</style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-950 via-slate-950 to-cyan-950">
+<div th:replace="~{fragments/nav :: nav}"></div>
+<div class="max-w-lg mx-auto px-4 py-10">
+  <div class="bg-slate-900/60 border border-blue-500/20 rounded-2xl p-8">
+    <h1 class="text-2xl font-bold text-white mb-6"
+        th:text="${isNew} ? 'Add Admin' : 'Edit Admin'"></h1>
+    <form th:action="${formAction}" method="post" class="space-y-4">
+      <div>
+        <label class="text-slate-400 text-sm block mb-1">Name</label>
+        <input type="text" name="name" required th:value="${admin.name}"
+               class="w-full bg-slate-800 border border-slate-600 text-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-blue-500"/>
+      </div>
+      <div>
+        <label class="text-slate-400 text-sm block mb-1">Email</label>
+        <input type="email" name="email" required th:value="${admin.email}"
+               class="w-full bg-slate-800 border border-slate-600 text-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-blue-500"/>
+      </div>
+      <div>
+        <label class="text-slate-400 text-sm block mb-1">Password</label>
+        <input type="password" name="password" required th:value="${admin.password}"
+               class="w-full bg-slate-800 border border-slate-600 text-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-blue-500"/>
+      </div>
+      <div>
+        <label class="text-slate-400 text-sm block mb-1">Phone</label>
+        <input type="text" name="phone" th:value="${admin.phone}"
+               class="w-full bg-slate-800 border border-slate-600 text-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-blue-500"/>
+      </div>
+      <div>
+        <label class="text-slate-400 text-sm block mb-1">Role</label>
+        <select name="adminRole" required
+                class="w-full bg-slate-800 border border-slate-600 text-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-blue-500">
+          <option value="ADMIN" th:selected="${admin.adminRole == 'ADMIN'}">ADMIN</option>
+          <option value="SUPER_ADMIN" th:selected="${admin.adminRole == 'SUPER_ADMIN'}">SUPER_ADMIN</option>
+        </select>
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button type="submit"
+                class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-xl text-sm font-semibold transition"
+                th:text="${isNew} ? 'Create Admin' : 'Update Admin'"></button>
+        <a href="/superadmin/dashboard"
+           class="border border-slate-600 text-slate-400 hover:text-white px-6 py-2 rounded-xl text-sm transition">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+</body></html>

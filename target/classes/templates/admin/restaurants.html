@@ -1,123 +1,84 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Restaurants | Food Delivery Admin</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Restaurants - Admin</title>
+<script src="https://cdn.tailwindcss.com"></script><script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        slate: {
+          300: '#A8A8A8',
+          400: '#A8A8A8',
+          600: 'rgba(255,255,255,0.08)',
+          800: 'rgba(255,255,255,0.05)',
+          900: '#1A1D23',
+          950: '#0F1115'
+        },
+        blue: {
+          400: '#C9A14A',
+          500: '#C9A14A',
+          600: '#A9863A',
+          950: '#0F1115'
+        },
+        cyan: {
+          300: '#C9A14A',
+          400: '#C9A14A',
+          950: '#0F1115'
+        },
+        white: '#F5F5F5'
+      }
+    }
+  }
+}
+</script>
+<style>
+  .border-blue-500\/20, .border-slate-800, .border-slate-600, .border-b {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+  }
+  .bg-slate-900\/60, .bg-slate-900\/80 {
+    background-color: #1A1D23 !important;
+  }
+  .bg-slate-800 {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+  }
+</style>
 </head>
-<body class="bg-[#0F1115] text-[#F5F5F5]">
-
-<!-- Navigation -->
-<nav class="bg-[#1A1D23] border-b border-[rgba(255,255,255,0.08)]">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div class="flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <div class="flex items-center gap-2">
-                    <div class="w-10 h-10 bg-gradient-to-r from-[#C9A14A] to-[#C9A14A] rounded-lg flex items-center justify-center">
-                        <span class="text-lg font-bold">🍽️</span>
-                    </div>
-                    <h1 class="text-2xl font-bold bg-gradient-to-r from-[#C9A14A] to-[#C9A14A] bg-clip-text text-transparent">FoodHub</h1>
-                </div>
-                <span class="text-[#A8A8A8]">|</span>
-                <span class="text-[#C9A14A] font-semibold">Admin</span>
-            </div>
-            <div class="flex gap-4">
-                <a href="/logout" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-semibold transition">Logout</a>
-            </div>
-        </div>
-    </div>
-</nav>
-
-<!-- Sidebar -->
-<div class="flex min-h-screen">
-    <aside class="w-64 bg-[#1A1D23] border-r border-[rgba(255,255,255,0.08)] p-6">
-        <nav class="space-y-2">
-            <a href="/admin/dashboard" class="block px-4 py-3 rounded-lg text-[#A8A8A8] hover:text-[#C9A14A] hover:bg-white/5 transition">
-                📊 Dashboard
-            </a>
-            <a href="/admin/restaurants" class="block px-4 py-3 rounded-lg bg-[#C9A14A]/20 text-[#C9A14A] border border-[rgba(255,255,255,0.08)] font-semibold">
-                🏪 Manage Restaurants
-            </a>
-            <a href="/restaurants" class="block px-4 py-3 rounded-lg text-[#A8A8A8] hover:text-[#C9A14A] hover:bg-white/5 transition">
-                👀 View Public Listing
-            </a>
-        </nav>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="flex-1">
-        <div class="max-w-7xl mx-auto px-6 py-12">
-            <!-- Header -->
-            <div class="flex justify-between items-center mb-8">
-                <div>
-                    <h2 class="text-4xl font-bold mb-2">Manage Restaurants</h2>
-                    <p class="text-[#A8A8A8]">CRUD operations for restaurant listings</p>
-                </div>
-                <a href="/admin/restaurants/new" class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-[#F5F5F5] font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 flex items-center gap-2">
-                    <span>➕</span>
-                    <span>New Restaurant</span>
-                </a>
-            </div>
-
-            <!-- Restaurants Table -->
-            <div class="bg-[#1A1D23] border border-[rgba(255,255,255,0.08)] rounded-xl overflow-hidden">
-                <div th:if="${restaurants.isEmpty()}" class="p-8 text-center">
-                    <p class="text-xl text-[#C9A14A] mb-4">No restaurants found</p>
-                    <a href="/admin/restaurants/new" class="inline-block bg-gradient-to-r from-[#C9A14A] to-[#C9A14A] hover:from-[#C9A14A] hover:to-[#C9A14A] text-[#F5F5F5] font-bold py-2 px-6 rounded-lg transition">
-                        Add First Restaurant
-                    </a>
-                </div>
-
-                <table class="w-full text-sm" th:if="${!restaurants.isEmpty()}">
-                    <thead>
-                        <tr class="border-b border-[rgba(255,255,255,0.08)] bg-[#0F1115]">
-                            <th class="px-6 py-4 text-left font-semibold text-[#C9A14A]">Restaurant Name</th>
-                            <th class="px-6 py-4 text-left font-semibold text-[#C9A14A]">Owner</th>
-                            <th class="px-6 py-4 text-left font-semibold text-[#C9A14A]">Cuisine</th>
-                            <th class="px-6 py-4 text-left font-semibold text-[#C9A14A]">Status</th>
-                            <th class="px-6 py-4 text-left font-semibold text-[#C9A14A]">Contact</th>
-                            <th class="px-6 py-4 text-center font-semibold text-[#C9A14A]">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="restaurant : ${restaurants}" class="border-b border-[rgba(255,255,255,0.08)] hover:bg-white/5/50 transition">
-                            <td class="px-6 py-4">
-                                <div class="font-semibold" th:text="${restaurant.name}"></div>
-                                <div class="text-xs text-[#A8A8A8] mt-1" th:text="${restaurant.address}"></div>
-                            </td>
-                            <td class="px-6 py-4" th:text="${restaurant.ownerName}"></td>
-                            <td class="px-6 py-4">
-                                <span class="bg-[#C9A14A]/20 text-[#C9A14A] px-3 py-1 rounded-full text-xs border border-[rgba(255,255,255,0.08)]" th:text="${restaurant.cuisineType}"></span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span th:if="${restaurant.status == 'OPEN'}" class="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-xs border border-[rgba(255,255,255,0.08)]">✓ OPEN</span>
-                                <span th:if="${restaurant.status == 'CLOSED'}" class="bg-gray-500/20 text-[#A8A8A8] px-3 py-1 rounded-full text-xs border border-gray-500/30">⊘ CLOSED</span>
-                                <span th:if="${restaurant.status == 'SUSPENDED'}" class="bg-yellow-500/20 text-yellow-400 px-3 py-1 rounded-full text-xs border border-[rgba(255,255,255,0.08)]">⏸ SUSPENDED</span>
-                            </td>
-                            <td class="px-6 py-4 text-xs text-[#A8A8A8]" th:text="${restaurant.phone}"></td>
-                            <td class="px-6 py-4">
-                                <div class="flex gap-2 justify-center">
-                                    <a th:href="@{/admin/restaurants/{id}/edit(id=${restaurant.id})}" class="bg-[#C9A14A]/20 hover:bg-blue-500/30 text-[#C9A14A] px-3 py-1 rounded border border-[rgba(255,255,255,0.08)] text-xs font-semibold transition">
-                                        Edit
-                                    </a>
-                                    <form th:action="@{/admin/restaurants/{id}/toggle(id=${restaurant.id})}" method="post" class="inline">
-                                        <button type="submit" class="bg-[#C9A14A]/20 hover:bg-cyan-500/30 text-[#C9A14A] px-3 py-1 rounded border border-[rgba(255,255,255,0.08)] text-xs font-semibold transition">
-                                            Toggle
-                                        </button>
-                                    </form>
-                                    <a th:href="@{/admin/restaurants/{id}/delete(id=${restaurant.id})}" class="bg-red-500/20 hover:bg-red-500/30 text-red-400 px-3 py-1 rounded border border-[rgba(255,255,255,0.08)] text-xs font-semibold transition" onclick="return confirm('Delete this restaurant?')">
-                                        Delete
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </main>
+<body class="min-h-screen bg-gradient-to-br from-blue-950 via-slate-950 to-cyan-950">
+<div th:replace="~{fragments/nav :: nav}"></div>
+<div class="max-w-7xl mx-auto px-4 py-10">
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-white">Restaurants</h1>
+    <a href="/admin/restaurants/new" class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2.5 rounded-xl font-semibold transition text-sm">Add Restaurant</a>
+  </div>
+  <div class="bg-slate-900/60 border border-blue-500/20 rounded-2xl overflow-hidden">
+    <table class="w-full text-sm">
+      <thead><tr class="border-b border-blue-500/20">
+        <th class="text-left text-slate-400 px-4 py-3">Name</th>
+        <th class="text-left text-slate-400 px-4 py-3">Cuisine</th>
+        <th class="text-left text-slate-400 px-4 py-3">Hours</th>
+        <th class="text-left text-slate-400 px-4 py-3">Status</th>
+        <th class="text-left text-slate-400 px-4 py-3">Actions</th>
+      </tr></thead>
+      <tbody>
+        <tr th:each="r : ${restaurants}" class="border-b border-slate-800 hover:bg-slate-800/30">
+          <td class="px-4 py-3"><a th:href="@{/admin/restaurants/{id}/menu(id=${r.id})}" class="text-white hover:text-cyan-300 hover:underline font-medium transition" th:text="${r.name}"></a></td>
+          <td class="px-4 py-3 text-slate-300" th:text="${r.cuisineType}"></td>
+          <td class="px-4 py-3 text-slate-400 text-xs" th:text="${r.openingTime + ' - ' + r.closingTime}"></td>
+          <td class="px-4 py-3"><span class="px-2 py-1 rounded-full text-xs"
+            th:classappend="${r.status == 'OPEN'} ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'"
+            th:text="${r.status}"></span></td>
+          <td class="px-4 py-3 flex gap-2 flex-wrap">
+            <a th:href="@{/admin/restaurants/{id}/edit(id=${r.id})}" class="text-cyan-400 hover:underline text-xs">Edit</a>
+            <form th:action="@{/admin/restaurants/{id}/toggle(id=${r.id})}" method="post" class="inline">
+              <button class="text-yellow-400 hover:underline text-xs" th:text="${r.status == 'OPEN' ? 'Close' : 'Open'}"></button>
+            </form>
+            <form th:action="@{/admin/restaurants/{id}/delete(id=${r.id})}" method="post" class="inline">
+              <button class="text-red-400 hover:underline text-xs">Delete</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
-
-</body>
-</html>
+</body></html>

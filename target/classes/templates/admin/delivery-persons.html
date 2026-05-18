@@ -1,133 +1,79 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logistics Team - Premium Delivery</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        premium: {
-                            bg: '#0F1115',
-                            surface: '#1A1D23',
-                            accent: '#C9A14A',
-                            text: '#F5F5F5',
-                            muted: '#A8A8A8',
-                            border: 'rgba(255,255,255,0.08)'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Delivery Persons - Admin</title>
+<script src="https://cdn.tailwindcss.com"></script><script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        slate: {
+          300: '#A8A8A8',
+          400: '#A8A8A8',
+          600: 'rgba(255,255,255,0.08)',
+          800: 'rgba(255,255,255,0.05)',
+          900: '#1A1D23',
+          950: '#0F1115'
+        },
+        blue: {
+          400: '#C9A14A',
+          500: '#C9A14A',
+          600: '#A9863A',
+          950: '#0F1115'
+        },
+        cyan: {
+          300: '#C9A14A',
+          400: '#C9A14A',
+          950: '#0F1115'
+        },
+        white: '#F5F5F5'
+      }
+    }
+  }
+}
+</script>
+<style>
+  .border-blue-500\/20, .border-slate-800, .border-slate-600, .border-b {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+  }
+  .bg-slate-900\/60, .bg-slate-900\/80 {
+    background-color: #1A1D23 !important;
+  }
+  .bg-slate-800 {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+  }
+</style>
 </head>
-
-<body class="bg-premium-bg min-h-screen text-premium-text relative overflow-x-hidden focus:outline-none">
-
-    <div
-        class="fixed top-20 right-1/4 w-[500px] h-[500px] bg-premium-accent/5 rounded-full blur-[100px] -z-10 pointer-events-none">
-    </div>
-
-    <!-- Navigation -->
-    <div th:replace="fragments/nav :: nav"></div>
-
-    <main class="max-w-7xl mx-auto px-4 py-10 relative z-10">
-        <!-- Page Header -->
-        <div
-            class="mb-10 flex flex-col sm:flex-row sm:items-center justify-between border-b border-premium-border pb-6 gap-6">
-            <div>
-                <h1 class="text-4xl font-bold text-premium-text mb-2 tracking-tight">Logistics <span
-                        class="text-premium-accent">Team</span></h1>
-                <p class="text-premium-muted font-light tracking-wide">Manage your premium delivery personnel</p>
-            </div>
-            <a href="/admin/delivery-persons/new"
-                class="bg-premium-accent hover:bg-yellow-600 text-[#0F1115] font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-premium-accent/20 transition duration-300 whitespace-nowrap">
-                + Add Partner
-            </a>
-        </div>
-
-        <!-- Delivery Persons Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div th:each="person : ${persons}"
-                class="bg-premium-surface border border-premium-border rounded-3xl p-8 shadow-xl hover:border-premium-accent/50 transition duration-300 relative overflow-hidden group">
-                <div
-                    class="absolute inset-0 bg-gradient-to-br from-premium-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 pointer-events-none">
-                </div>
-                <div class="relative z-10">
-                    <!-- Header -->
-                    <div class="flex items-start justify-between mb-6">
-                        <div class="flex-1">
-                            <h3 class="text-2xl font-bold text-premium-text tracking-wide" th:text="${person.name}">
-                                Person Name</h3>
-                            <p class="text-sm text-premium-muted mt-1 font-medium" th:text="${person.email}">
-                                email@delivery.com</p>
-                        </div>
-                        <div
-                            class="flex items-center gap-2 bg-[#0F1115] px-3 py-1 rounded-full border border-premium-border">
-                            <div th:if="${person.available}" class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse">
-                            </div>
-                            <div th:unless="${person.available}" class="w-2 h-2 bg-red-500 rounded-full"></div>
-                            <span class="text-xs uppercase tracking-widest font-semibold text-premium-muted"
-                                th:text="${person.available ? 'Active' : 'Offline'}">Status</span>
-                        </div>
-                    </div>
-
-                    <!-- Details -->
-                    <div class="space-y-4 mb-8 pb-8 border-b border-premium-border/50">
-                        <div class="flex items-center gap-3">
-                            <div
-                                class="w-8 h-8 rounded-full bg-premium-bg flex items-center justify-center border border-premium-border">
-                                <span class="text-premium-accent text-sm">📞</span>
-                            </div>
-                            <span class="text-premium-text font-medium" th:text="${person.phone}">Phone</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div
-                                class="w-8 h-8 rounded-full bg-premium-bg flex items-center justify-center border border-premium-border">
-                                <span class="text-premium-accent text-sm">🚗</span>
-                            </div>
-                            <span class="text-premium-text font-medium tracking-widest uppercase text-sm"
-                                th:text="${person.vehicleNumber}">Vehicle</span>
-                        </div>
-                    </div>
-
-                    <!-- Actions -->
-                    <div class="flex gap-4">
-                        <a th:href="@{/admin/delivery-persons/{id}/edit(id=${person.id})}"
-                            class="flex-1 bg-transparent border border-premium-border hover:bg-premium-bg hover:text-premium-accent text-premium-text font-semibold py-3 rounded-xl transition duration-300 text-center tracking-wide uppercase text-sm">
-                            Edit
-                        </a>
-                        <form method="post" th:action="@{/admin/delivery-persons/{id}/delete(id=${person.id})}"
-                            class="flex-1">
-                            <button type="submit"
-                                onclick="return confirm('Are you sure you want to remove this partner?')"
-                                class="w-full bg-red-900/20 border border-red-500/20 hover:bg-red-900/40 text-red-400 hover:text-red-300 font-semibold py-3 rounded-xl transition duration-300 tracking-wide uppercase text-sm">
-                                Remove
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <div th:if="${#lists.isEmpty(persons)}"
-                class="col-span-full bg-premium-surface border border-premium-border rounded-3xl p-16 text-center shadow-xl">
-                <div
-                    class="w-20 h-20 bg-[#0F1115] rounded-full mx-auto flex items-center justify-center border border-premium-border mb-6">
-                    <span class="text-3xl text-premium-muted">👥</span>
-                </div>
-                <h3 class="text-2xl font-bold text-premium-text mb-2">No logistics partners found</h3>
-                <p class="text-premium-muted mb-8 font-light">Your delivery squad is currently empty.</p>
-                <a href="/admin/delivery-persons/new"
-                    class="inline-block bg-premium-accent hover:bg-yellow-600 text-[#0F1115] font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-premium-accent/20 transition duration-300 tracking-wide">
-                    Onboard First Partner
-                </a>
-            </div>
-        </div>
-    </main>
-</body>
-
-</html>
+<body class="min-h-screen bg-gradient-to-br from-blue-950 via-slate-950 to-cyan-950">
+<div th:replace="~{fragments/nav :: nav}"></div>
+<div class="max-w-5xl mx-auto px-4 py-10">
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-white">Delivery Persons</h1>
+    <a href="/admin/delivery-persons/new" class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2.5 rounded-xl font-semibold transition text-sm">Add Person</a>
+  </div>
+  <div class="bg-slate-900/60 border border-blue-500/20 rounded-2xl overflow-hidden">
+    <table class="w-full text-sm">
+      <thead><tr class="border-b border-blue-500/20">
+        <th class="text-left text-slate-400 px-4 py-3">Name</th>
+        <th class="text-left text-slate-400 px-4 py-3">Phone</th>
+        <th class="text-left text-slate-400 px-4 py-3">Available</th>
+        <th class="text-left text-slate-400 px-4 py-3">Actions</th>
+      </tr></thead>
+      <tbody>
+        <tr th:each="p : ${persons}" class="border-b border-slate-800 hover:bg-slate-800/30">
+          <td class="px-4 py-3 text-white" th:text="${p.name}"></td>
+          <td class="px-4 py-3 text-slate-300" th:text="${p.phone}"></td>
+          <td class="px-4 py-3"><span class="px-2 py-1 rounded-full text-xs"
+            th:classappend="${p.available} ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'"
+            th:text="${p.available ? 'Available' : 'Busy'}"></span></td>
+          <td class="px-4 py-3 flex gap-2">
+            <a th:href="@{/admin/delivery-persons/{id}/edit(id=${p.id})}" class="text-cyan-400 hover:underline text-xs">Edit</a>
+            <form th:action="@{/admin/delivery-persons/{id}/delete(id=${p.id})}" method="post" class="inline">
+              <button class="text-red-400 hover:underline text-xs">Delete</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body></html>
