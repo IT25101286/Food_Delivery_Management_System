@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make Payment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0F1115; color: #F5F5F5; }
+        input, select { background-color: #0F1115 !important; border-color: rgba(201, 161, 74, 0.2) !important; color: #F5F5F5 !important; }
+    </style>
+</head>
+<body>
+<div class="mx-auto max-w-5xl px-6 py-10">
+    <div class="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <h1 class="text-3xl font-black" style="color: #C9A14A;">Make Payment</h1>
+            <p style="color: #A8A8A8;">Welcome, <span class="font-semibold" style="color: #F5F5F5;" th:text="${session.fullName}"></span></p>
+        </div>
+        <div class="flex gap-2">
+            <a href="/payment/my-payments" class="rounded-lg px-4 py-2 text-sm" style="border: 1px solid rgba(201, 161, 74, 0.3); background-color: #1A1D23; color: #F5F5F5;">My Payments</a>
+            <a href="/logout" class="rounded-lg px-4 py-2 text-sm font-semibold" style="background-color: #C9A14A; color: #0F1115;">Logout</a>
+        </div>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-3">
+        <div class="md:col-span-2 rounded-2xl border-2 p-6" style="border-color: rgba(201, 161, 74, 0.3); background-color: #1A1D23;">
+            <form method="post" action="/payment/pay" class="space-y-5">
+                <div>
+                    <label class="mb-1 block text-sm" style="color: #A8A8A8;">Order Reference</label>
+                    <input type="text" name="orderRef" required class="w-full rounded-lg px-4 py-2.5 outline-none" style="background-color: #0F1115; border: 1px solid rgba(201, 161, 74, 0.2); color: #F5F5F5;" placeholder="ORD-2026-001">
+                </div>
+                <div>
+                    <label class="mb-1 block text-sm" style="color: #A8A8A8;">Amount</label>
+                    <input type="number" name="amount" step="0.01" min="0.01" required class="w-full rounded-lg px-4 py-2.5 outline-none" style="background-color: #0F1115; border: 1px solid rgba(201, 161, 74, 0.2); color: #F5F5F5;" placeholder="0.00">
+                </div>
+                <div>
+                    <label class="mb-1 block text-sm" style="color: #A8A8A8;">Payment Method</label>
+                    <select name="paymentMethod" required class="w-full rounded-lg px-4 py-2.5 outline-none" style="background-color: #0F1115; border: 1px solid rgba(201, 161, 74, 0.2); color: #F5F5F5;">
+                        <option value="CASH">CASH</option>
+                        <option value="CARD">CARD</option>
+                        <option value="MOBILE">MOBILE</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full rounded-lg px-4 py-2.5 font-semibold text-white hover:opacity-90" style="background: linear-gradient(to right, #C9A14A, #B8911F);">Submit Payment</button>
+            </form>
+        </div>
+
+        <div class="rounded-2xl border-2 p-6" style="border-color: rgba(201, 161, 74, 0.3); background-color: #1A1D23;">
+            <h2 class="text-lg font-bold" style="color: #C9A14A;">Methods</h2>
+            <div class="mt-4 space-y-3 text-sm">
+                <span class="inline-flex rounded-full px-3 py-1 font-semibold" style="border: 1px solid rgba(34, 197, 94, 0.3); background-color: rgba(34, 197, 94, 0.1); color: #86EFAC;">CASH</span>
+                <span class="inline-flex rounded-full px-3 py-1 font-semibold" style="border: 1px solid rgba(59, 130, 246, 0.3); background-color: rgba(59, 130, 246, 0.1); color: #93C5FD;">CARD</span>
+                <span class="inline-flex rounded-full px-3 py-1 font-semibold" style="border: 1px solid rgba(201, 161, 74, 0.3); background-color: rgba(201, 161, 74, 0.1); color: #C9A14A;">MOBILE</span>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

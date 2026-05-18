@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<nav th:fragment="nav" class="bg-slate-900/80 border-b border-blue-500/20 backdrop-blur-sm sticky top-0 z-50"
+     style="background-color:#1A1D23;border-bottom:1px solid rgba(255,255,255,0.08);">
+  <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
+    <a href="/" class="flex items-center gap-2">
+      <span class="font-bold px-3 py-1 rounded-lg text-lg" style="background:linear-gradient(to right,#C9A14A,#C9A14A);color:#0F1115;">FD</span>
+      <span class="font-semibold text-lg hidden sm:block" style="color:#F5F5F5;">FoodDelivery</span>
+    </a>
+    <div class="flex items-center gap-4">
+      <a href="/restaurants" style="color:#A8A8A8;" class="hover:text-white text-sm transition">Restaurants</a>
+      <th:block th:if="${session.userId != null}">
+        <th:block th:if="${session.userRole == 'USER'}">
+          <a href="/order/my-orders" style="color:#A8A8A8;" class="hover:text-white text-sm transition">Orders</a>
+          <a href="/payment/my-payments" style="color:#A8A8A8;" class="hover:text-white text-sm transition">Payments</a>
+          <a href="/user/dashboard" style="color:#A8A8A8;" class="hover:text-white text-sm transition">Dashboard</a>
+          <!-- Cart icon with badge -->
+          <a href="/cart" class="relative inline-flex items-center" style="color:#A8A8A8;" title="Cart">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+            </svg>
+            <th:block th:if="${session.cartCount != null and session.cartCount > 0}">
+              <span class="absolute -top-2 -right-2 text-xs font-bold rounded-full flex items-center justify-center"
+                    style="background-color:#C9A14A;color:#0F1115;min-width:18px;height:18px;padding:0 3px;font-size:10px;"
+                    th:text="${session.cartCount}"></span>
+            </th:block>
+          </a>
+        </th:block>
+        <th:block th:if="${session.userRole == 'ADMIN'}">
+          <a href="/admin/dashboard" style="color:#A8A8A8;" class="hover:text-white text-sm transition">Dashboard</a>
+          <a href="/admin/orders" style="color:#A8A8A8;" class="hover:text-white text-sm transition">Orders</a>
+          <a href="/admin/restaurants" style="color:#A8A8A8;" class="hover:text-white text-sm transition">Restaurants</a>
+        </th:block>
+        <th:block th:if="${session.userRole == 'SUPER_ADMIN'}">
+          <a href="/superadmin/dashboard" style="color:#A8A8A8;" class="hover:text-white text-sm transition">Dashboard</a>
+        </th:block>
+        <span class="text-sm" style="color:#A8A8A8;" th:text="${session.userName}"></span>
+        <form action="/logout" method="post" class="inline">
+          <button class="px-3 py-1.5 rounded-xl text-sm transition font-semibold"
+                  style="background-color:#C9A14A;color:#0F1115;">Logout</button>
+        </form>
+      </th:block>
+      <th:block th:if="${session.userId == null}">
+        <a href="/login" class="px-3 py-1.5 rounded-xl text-sm transition font-semibold"
+           style="background-color:#C9A14A;color:#0F1115;">Login</a>
+        <a href="/register" class="px-3 py-1.5 rounded-xl text-sm transition"
+           style="border:1px solid #C9A14A;color:#C9A14A;">Register</a>
+      </th:block>
+    </div>
+  </div>
+</nav>
+</body>
+</html>

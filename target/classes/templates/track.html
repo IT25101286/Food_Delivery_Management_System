@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Track Order - FoodDelivery</title>
+<script src="https://cdn.tailwindcss.com"></script><script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        slate: { 300:'#A8A8A8', 400:'#A8A8A8', 600:'rgba(255,255,255,0.08)', 800:'rgba(255,255,255,0.05)', 900:'#1A1D23', 950:'#0F1115' },
+        blue:  { 400:'#C9A14A', 500:'#C9A14A', 600:'#A9863A', 950:'#0F1115' },
+        cyan:  { 300:'#C9A14A', 400:'#C9A14A', 950:'#0F1115' },
+        white: '#F5F5F5'
+      }
+    }
+  }
+}
+</script>
+<style>
+  .border-blue-500\/20,.border-slate-800,.border-slate-600,.border-b { border-color:rgba(255,255,255,0.08)!important; }
+  .bg-slate-900\/60,.bg-slate-900\/80 { background-color:#1A1D23!important; }
+  .bg-slate-800 { background-color:rgba(255,255,255,0.05)!important; }
+  .step-line { height:3px; flex:1; border-radius:2px; }
+</style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-950 via-slate-950 to-cyan-950">
+<div th:replace="~{fragments/nav :: nav}"></div>
+<div class="max-w-2xl mx-auto px-4 py-10">
+
+  <!-- Header -->
+  <div class="flex items-center gap-3 mb-2">
+    <a href="/order/my-orders" style="color:#A8A8A8;" class="text-sm hover:text-white transition">← My Orders</a>
+  </div>
+  <h1 class="text-3xl font-bold mb-1" style="color:#F5F5F5;">Track Order</h1>
+  <p class="text-sm mb-8" style="color:#A8A8A8;">
+    Ref: <span class="font-mono" style="color:#C9A14A;" th:text="${orderRef}"></span>
+  </p>
+
+  <!-- Order not found -->
+  <div th:if="${order == null}" class="rounded-2xl p-8 text-center"
+       style="background-color:#1A1D23;border:1px solid rgba(255,255,255,0.08);">
+    <p style="color:#A8A8A8;">No order found for this reference.</p>
+    <a href="/order/my-orders" class="inline-block mt-4 px-5 py-2 rounded-xl text-sm font-semibold"
+       style="background-color:#C9A14A;color:#0F1115;">Back to Orders</a>
+  </div>
+
+  <!-- Order found -->
+  <div th:if="${order != null}" class="space-y-5">
+
+    <!-- Cancelled state -->
+    <div th:if="${trackStep == 0}" class="rounded-2xl p-6 text-center"
+         style="background-color:#1A1D23;border:1px solid rgba(239,68,68,0.3);">
+      <div class="text-4xl mb-3">✕</div>
+      <p class="text-lg font-bold" style="color:#f87171;">Order Cancelled</p>
+      <p class="text-sm mt-1" style="color:#A8A8A8;" th:text="${trackMessage}"></p>
+    </div>
+
+    <!-- Active order: status banner + step tracker -->
+    <div th:if="${trackStep != null and trackStep > 0}">
+
+      <!-- Status banner -->
+      <div class="rounded-2xl p-5" th:style="${trackStep == 5}
+          ? 'background-color:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);'
+          : 'background-color:rgba(201,161,74,0.1);border:1px solid rgba(201,161,74,0.25);'">
+        <div class="flex items-center gap-3">
+          <!-- Icon -->
+          <div class="w-10 h-10 rounded-full flex items-center justify-center text-lg flex-shrink-0"
+               th:style="${trackStep == 5} ? 'background-color:rgba(34,197,94,0.2);' : 'background-color:rgba(201,161,74,0.2);'">
+            <span th:if="${trackStep == 1}">🕐</span>
+            <span th:if="${trackStep == 2}">✓</span>
+            <span th:if="${trackStep == 3}">👨‍🍳</span>
+            <span th:if="${trackStep == 4}">🚗</span>
+            <span th:if="${trackStep == 5}">✅</span>
+          </div>
+          <div>
+            <p class="font-semibold" th:style="${trackStep == 5} ? 'color:#4ade80;' : 'color:#C9A14A;'"
+               th:text="${trackMessage}"></p>
+            <p class="text-xs mt-0.5" style="color:#A8A8A8;"
+               th:text="${restaurantName}"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step tracker -->
+      <div class="rounded-2xl p-6" style="background-color:#1A1D23;border:1px solid rgba(255,255,255,0.08);">
+        <h2 class="text-sm font-semibold mb-6" style="color:#A8A8A8;">Order Progress</h2>
+
+        <!-- Steps row -->
+        <div class="flex items-center mb-4">
+
+          <!-- Step 1: Order Placed -->
+          <div class="flex flex-col items-center" style="min-width:52px;">
+            <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold mb-1"
+                 th:style="${trackStep >= 1} ? 'background-color:#C9A14A;color:#0F1115;' : 'background-color:rgba(255,255,255,0.08);color:#A8A8A8;'">
+              <span th:if="${trackStep > 1}">✓</span>
+              <span th:if="${trackStep == 1}">1</span>
+              <span th:if="${trackStep &lt; 1}">1</span>
+            </div>
+          </div>
+
+          <!-- Line 1→2 -->
+          <div class="step-line" th:style="${trackStep >= 2} ? 'background-color:#C9A14A;' : 'background-color:rgba(255,255,255,0.08);'"></div>
+
+          <!-- Step 2: Confirmed -->
+          <div class="flex flex-col items-center" style="min-width:52px;">
+            <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold mb-1"
+                 th:style="${trackStep >= 2} ? 'background-color:#C9A14A;color:#0F1115;' : 'background-color:rgba(255,255,255,0.08);color:#A8A8A8;'">
+              <span th:if="${trackStep > 2}">✓</span>
+              <span th:if="${trackStep == 2}">2</span>
+              <span th:if="${trackStep &lt; 2}">2</span>
+            </div>
+          </div>
+
+          <!-- Line 2→3 -->
+          <div class="step-line" th:style="${trackStep >= 3} ? 'background-color:#C9A14A;' : 'background-color:rgba(255,255,255,0.08);'"></div>
+
+          <!-- Step 3: Preparing -->
+          <div class="flex flex-col items-center" style="min-width:52px;">
+            <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold mb-1"
+                 th:style="${trackStep >= 3} ? 'background-color:#C9A14A;color:#0F1115;' : 'background-color:rgba(255,255,255,0.08);color:#A8A8A8;'">
+              <span th:if="${trackStep > 3}">✓</span>
+              <span th:if="${trackStep == 3}">3</span>
+              <span th:if="${trackStep &lt; 3}">3</span>
+            </div>
+          </div>
+
+          <!-- Line 3→4 -->
+          <div class="step-line" th:style="${trackStep >= 4} ? 'background-color:#C9A14A;' : 'background-color:rgba(255,255,255,0.08);'"></div>
+
+          <!-- Step 4: On the Way -->
+          <div class="flex flex-col items-center" style="min-width:52px;">
+            <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold mb-1"
+                 th:style="${trackStep >= 4} ? 'background-color:#C9A14A;color:#0F1115;' : 'background-color:rgba(255,255,255,0.08);color:#A8A8A8;'">
+              <span th:if="${trackStep > 4}">✓</span>
+              <span th:if="${trackStep == 4}">4</span>
+              <span th:if="${trackStep &lt; 4}">4</span>
+            </div>
+          </div>
+
+          <!-- Line 4→5 -->
+          <div class="step-line" th:style="${trackStep >= 5} ? 'background-color:#4ade80;' : 'background-color:rgba(255,255,255,0.08);'"></div>
+
+          <!-- Step 5: Delivered -->
+          <div class="flex flex-col items-center" style="min-width:52px;">
+            <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold mb-1"
+                 th:style="${trackStep >= 5} ? 'background-color:#4ade80;color:#0F1115;' : 'background-color:rgba(255,255,255,0.08);color:#A8A8A8;'">
+              <span th:if="${trackStep >= 5}">✓</span>
+              <span th:if="${trackStep &lt; 5}">5</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step labels -->
+        <div class="flex justify-between text-xs" style="color:#A8A8A8;">
+          <span class="text-center" style="width:52px;" th:style="${trackStep == 1} ? 'color:#C9A14A;font-weight:600;' : ''">Placed</span>
+          <span class="text-center flex-1"></span>
+          <span class="text-center" style="width:52px;" th:style="${trackStep == 2} ? 'color:#C9A14A;font-weight:600;' : ''">Confirmed</span>
+          <span class="text-center flex-1"></span>
+          <span class="text-center" style="width:52px;" th:style="${trackStep == 3} ? 'color:#C9A14A;font-weight:600;' : ''">Preparing</span>
+          <span class="text-center flex-1"></span>
+          <span class="text-center" style="width:52px;" th:style="${trackStep == 4} ? 'color:#C9A14A;font-weight:600;' : ''">On Way</span>
+          <span class="text-center flex-1"></span>
+          <span class="text-center" style="width:52px;" th:style="${trackStep == 5} ? 'color:#4ade80;font-weight:600;' : ''">Delivered</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order details card -->
+    <div class="rounded-2xl p-5 space-y-3" style="background-color:#1A1D23;border:1px solid rgba(255,255,255,0.08);">
+      <h2 class="text-sm font-semibold mb-1" style="color:#A8A8A8;">Order Details</h2>
+      <div class="flex justify-between text-sm">
+        <span style="color:#A8A8A8;">Restaurant</span>
+        <span style="color:#F5F5F5;" th:text="${restaurantName}"></span>
+      </div>
+      <div class="flex justify-between text-sm">
+        <span style="color:#A8A8A8;">Items</span>
+        <span style="color:#F5F5F5;text-align:right;max-width:60%;" th:text="${order.itemsSummary}"></span>
+      </div>
+      <div class="flex justify-between text-sm">
+        <span style="color:#A8A8A8;">Amount</span>
+        <span style="color:#C9A14A;font-weight:700;" th:text="'Rs. ' + ${order.totalAmount}"></span>
+      </div>
+      <div class="flex justify-between text-sm">
+        <span style="color:#A8A8A8;">Address</span>
+        <span style="color:#F5F5F5;text-align:right;max-width:60%;" th:text="${order.deliveryAddress}"></span>
+      </div>
+    </div>
+
+    <!-- Delivery person card (if assigned) -->
+    <div th:if="${delivery != null and delivery.deliveryPersonId != null}"
+         class="rounded-2xl p-5 space-y-3" style="background-color:#1A1D23;border:1px solid rgba(255,255,255,0.08);">
+      <h2 class="text-sm font-semibold mb-1" style="color:#A8A8A8;">Delivery Info</h2>
+      <div th:if="${delivery.estimatedMinutes != null}" class="flex justify-between text-sm">
+        <span style="color:#A8A8A8;">Estimated Time</span>
+        <span class="font-semibold" style="color:#C9A14A;" th:text="${delivery.estimatedMinutes + ' min'}"></span>
+      </div>
+    </div>
+
+  </div>
+</div>
+</body></html>
